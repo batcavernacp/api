@@ -1,0 +1,22 @@
+enum SWITCH {
+  ON
+  OFF
+}
+
+input SwitchInput {
+  turn: SWITCH!
+  relay: Int!
+}
+
+type Mutation {
+  switch(input: SwitchInput!): Boolean @auth
+}
+
+type SwitchedPayload {
+  turned: SWITCH!
+  relay: Int!
+}
+
+type Subscription {
+  switched: SwitchedPayload!
+}

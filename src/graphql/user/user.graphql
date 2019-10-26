@@ -1,0 +1,22 @@
+type User implements Node inherits BaseNode {
+  username: String
+  email: String
+}
+
+type MePayload {
+  user: User!
+  test: User!
+}
+
+type SearchPayload {
+  users: Connection<User>
+}
+
+type Query {
+  users(username: String!, after: String, before: String, first: Int, last: Int): SearchPayload!
+  me: MePayload @auth
+}
+
+type Subscription {
+  test: User
+}

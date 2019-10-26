@@ -1,0 +1,15 @@
+{
+  "ext": "ts, graphql, js",
+  "env": {
+    "MONGO_URI": "mongodb://localhost/bat",
+    "CLOUDMQTT_URL": "mqtt://asdadasd:asdasdas@m2222.cloudmqtt.com:13933",
+    "REDIS_HOST": "localhost",
+    "REDIS_PORT": 6379,
+    "FIREBASE_PROJECT_ID": "asdadasd",
+    "FIREBASE_PRIVATE_KEY_ID": "234234234234",
+    "FIREBASE_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----\nasdasda\n-----END PRIVATE KEY-----\n",
+    "FIREBASE_CLIENT_EMAIL": "firebase-adminsdk-yp8gr@asdadasd.iam.gserviceaccount.com",
+    "FIREBASE_CLIENT_ID": "3234234234234",
+    "FIREBASE_CLIENT_X509_CERT_URL": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-yp8gr%40asdadasd.iam.gserviceaccount.com"   
+  }
+}

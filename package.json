@@ -1,0 +1,54 @@
+{
+  "name": "express-graphql-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.ts",
+    "build": "tsc && yarn copy-graphql-files && yarn copy-js-files",
+    "heroku-postbuild": "yarn build",
+    "start": "NODE_ENV=production node dist/index.js",
+    "copy-graphql-files": "copyfiles --flat src/graphql/*.graphql src/graphql/**/*.graphql dist/src/graphql",
+    "copy-js-files": "copyfiles -u 1 src/packages/*.js src/repositories/mongoose/plugins/*.js dist/src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/graphql": "^14.5.0",
+    "@types/graphql-relay": "^0.4.11",
+    "@types/mongoose": "^5.5.18",
+    "@types/node": "^12.7.8",
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
+    "copyfiles": "^2.1.1",
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "nodemon": "^1.19.3",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.9.4",
+    "async-redis": "^1.1.7",
+    "cors": "^2.8.5",
+    "dataloader": "^1.4.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.6.0",
+    "graphql": "^14.5.8",
+    "graphql-redis-subscriptions": "^2.1.1",
+    "graphql-relay": "^0.6.0",
+    "mongoose": "^5.7.3",
+    "mqtt": "^3.0.0",
+    "schemalizer": "^1.0.1"
+  },
+  "engines": {
+    "node": "10.16.2",
+    "yarn": "1.x"
+  }
+}

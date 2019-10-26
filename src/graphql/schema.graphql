@@ -1,0 +1,36 @@
+interface Node {
+  id: ID!
+}
+
+type BaseNode {
+  id: ID!
+  createdAt: String
+  updatedAt: String
+}
+
+type Query {
+  node(id: ID!): Node
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Payload {
+  error: String
+}
+
+@alias((T) => T + 'Connection')
+type Connection<T> {
+	edges: [Edge<T>!]!
+  pageInfo: PageInfo!
+}
+
+@alias((T) => T + 'Edge')
+type Edge<T> {
+  cursor: String
+  node: T
+}
