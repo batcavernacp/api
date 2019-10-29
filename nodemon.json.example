@@ -1,6 +1,7 @@
 {
   "ext": "ts, graphql, js",
   "env": {
+    "DIALOGFLOW_SECRET": "asasdasd:asdasdasd",
     "MONGO_URI": "mongodb://localhost/bat",
     "CLOUDMQTT_URL": "mqtt://asdadasd:asdasdas@m2222.cloudmqtt.com:13933",
     "REDIS_HOST": "localhost",
