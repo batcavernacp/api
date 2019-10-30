@@ -12,6 +12,7 @@
     "FIREBASE_CLIENT_EMAIL": "firebase-adminsdk-yp8gr@asdadasd.iam.gserviceaccount.com",
     "FIREBASE_CLIENT_ID": "3234234234234",
     "FIREBASE_CLIENT_X509_CERT_URL": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-yp8gr%40asdadasd.iam.gserviceaccount.com",
-    "DEBUG_DIALOGFLOW": false
+    "DEBUG_DIALOGFLOW": false,
+    "JWT_SECRET_KEY": "secretkeysshhh"
   }
 }
