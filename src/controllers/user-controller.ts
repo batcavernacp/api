@@ -7,7 +7,9 @@ module.exports = ({ repositories }) => {
     get: (_id, field) => User.getField({ _id }, field),
 
     load: (id, field) => User.load(id, field),
-    
-    loadBeta: (id, info) => User.loadBeta(id, info)
+
+    loadBeta: (id, info) => User.loadBeta(id, info),
+
+    loadManyBeta: (ids, info) => User.loadManyBeta(ids, info)
   }
 }

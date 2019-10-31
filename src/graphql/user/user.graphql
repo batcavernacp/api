@@ -1,6 +1,7 @@
 type User implements Node inherits BaseNode {
   username: String
   email: String
+  devicesOwned: [Device]
 }
 
 type MePayload {

@@ -1,0 +1,18 @@
+type Mutation {
+  registerWithDevice(input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
+  checkQRCode (input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
+}
+
+input RegisterWithDeviceInput {
+  qrcode: String!
+  name: String
+}
+
+type RegisterWithDevicePayload {
+  success: Boolean
+}
+
+type Device implements Node inherits BaseNode{
+  owner: User
+  users: [User]
+}

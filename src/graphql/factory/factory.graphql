@@ -1,0 +1,11 @@
+input CreateDeviceInput {
+  id: String
+}
+
+type Mutation {
+  createDevice(device: CreateDeviceInput!): CreateDevicePayload!
+}
+
+type CreateDevicePayload {
+  token: String!
+}

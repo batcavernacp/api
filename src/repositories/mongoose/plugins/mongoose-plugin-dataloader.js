@@ -10,6 +10,10 @@ module.exports = function (schema, { name }) {
     return DataLoaderFactory.getInstanceBeta(this, info, name).load(id)
   }
 
+  schema.statics.loadManyBeta = function (ids, info) {
+    return DataLoaderFactory.getInstanceBeta(this, info, name).loadMany(ids)
+  }
+
   // schema.statics.loadMany = function (ids) {
   //   return Loader(this).loadMany(ids)
   // }
