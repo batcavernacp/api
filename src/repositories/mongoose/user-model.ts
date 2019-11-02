@@ -18,6 +18,9 @@ module.exports = (mongoose: Mongoose) => {
     },
     devicesOwned: [{
       type: mongoose.Types.ObjectId
+    }],
+    devicesInvited: [{
+      type: mongoose.Types.ObjectId
     }]
   }
   const userSchema = new Schema(schema, { timestamps: true })

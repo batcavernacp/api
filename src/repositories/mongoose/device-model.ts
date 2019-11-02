@@ -7,7 +7,7 @@ module.exports = (mongoose: Mongoose) => {
   const { Schema, model } = mongoose
 
   const schema = {
-    id: {
+    channel: {
       type: String,
       required: true
     },
@@ -17,7 +17,7 @@ module.exports = (mongoose: Mongoose) => {
     owner: {
       type: mongoose.Types.ObjectId
     },
-    users: [{
+    usersInvited: [{
       type: mongoose.Types.ObjectId
     }]
   }
@@ -25,7 +25,7 @@ module.exports = (mongoose: Mongoose) => {
 
   deviceSchema.plugin(dataloaderPlugin, { name: 'Device' })
 
-  deviceSchema.index({ id: 'text' }, { unique: true })
+  deviceSchema.index({ channel: 'text' }, { unique: true })
 
   deviceSchema.statics.register = function (newDevice) {
     return this.create(newDevice).catch(err => {

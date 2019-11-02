@@ -3,5 +3,6 @@ type Query {
 }
 
 type MyDevicesPayload {
-  devices: [Device]
+  owned: [Device]
+  guest: [Device]
 }

@@ -1,9 +1,11 @@
+import { ObjectId } from 'bson'
+
 exports.resolver = {
   Device: {
-    owner: ({ owner }, _, { repositories }, info) =>
-      repositories.mongoose.models.User.load(owner, info),
+    owner: ({ _doc }, _, { repositories }, info) =>
+      repositories.mongoose.models.User.load(_doc.owner, info),
 
-    users: ({ users }, _, { repositories }, info) =>
-      repositories.mongoose.models.User.loadMany(users, info)
+    users: ({ _doc }, _, { repositories }, info) =>
+      repositories.mongoose.models.User.loadMany(_doc.users, info)
   }
 }

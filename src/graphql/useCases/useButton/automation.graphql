@@ -5,7 +5,7 @@ enum SWITCH {
 
 input SwitchInput {
   turn: SWITCH!
-  relay: Int!
+  device: ID!
 }
 
 type Mutation {

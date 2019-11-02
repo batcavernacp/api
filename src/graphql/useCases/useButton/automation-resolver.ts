@@ -2,10 +2,22 @@ import { Context } from '../../../apollo'
 
 exports.resolver = {
   Mutation: {
-    switch: (_, { input }, { services }): boolean => {
-      const { turn, relay } = input
-      services.mqtt.publish('/' + turn, relay.toString())
-      console.log('/' + turn, relay.toString())
+    switch: async (_, { input }, { services, repositories }: Context) => {
+      const { redis } = services
+      // TODO: check if user is allowed to use device
+      const topic = await redis.get(input.device)
+
+      let channel = '/' + input.turn
+      if (topic) {
+        channel += topic
+      } else {
+        const device = await repositories.mongoose.models.Device.findOne({ _id: input.device }, { channel: 1 })
+        channel += device.channel
+        redis.set(input.device, device.channel)
+      }
+
+      services.mqtt.publish(channel, '1')
+      console.log(channel, '1')
       return true
     }
   },
