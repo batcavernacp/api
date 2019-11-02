@@ -9,12 +9,14 @@
     "heroku-postbuild": "yarn build",
     "start": "NODE_ENV=production node dist/index.js",
     "copy-graphql-files": "copyfiles --flat src/graphql/*.graphql src/graphql/**/*.graphql dist/src/graphql",
-    "copy-js-files": "copyfiles -u 1 src/packages/*.js src/repositories/mongoose/plugins/*.js dist/src"
+    "copy-js-files": "copyfiles -u 1 src/packages/*.js src/repositories/mongoose/plugins/*.js dist/src",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.8.2",
     "@types/express": "^4.17.1",
     "@types/graphql": "^14.5.0",
     "@types/graphql-relay": "^0.4.11",
@@ -32,7 +34,10 @@
     "eslint-plugin-standard": "^4.0.1",
     "nodemon": "^1.19.3",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "@graphql-codegen/typescript": "1.8.2",
+    "@graphql-codegen/typescript-resolvers": "1.8.2",
+    "@graphql-codegen/introspection": "1.8.2"
   },
   "dependencies": {
     "actions-on-google": "^2.12.0",
