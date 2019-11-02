@@ -8,6 +8,8 @@ module.exports = ({ repositories }) => {
 
     load: (id, field) => User.load(id, field),
 
+    myDevices: async user => User.getField({ _id: user }, 'devicesOwned'),
+
     loadBeta: (id, info) => User.loadBeta(id, info),
 
     loadManyBeta: (ids, info) => User.loadManyBeta(ids, info)

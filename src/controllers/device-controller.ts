@@ -55,6 +55,8 @@ module.exports = ({ repositories, services }) => {
       } catch (err) {
         return false
       }
-    }
+    },
+
+    loadMany: async (devices, info) => Device.loadManyBeta(await devices, info)
   }
 }

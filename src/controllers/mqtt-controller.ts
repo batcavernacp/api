@@ -6,12 +6,14 @@ module.exports = ({ services }) => {
     mqtt.subscribe('turnedOff')
   })
 
-  mqtt.on('message', function(topic, msg, pkt) {
+  mqtt.on('message', function (topic, msg, pkt) {
     const value = JSON.parse(msg)
-    pubsub.publish('SWITCHED', { switched: {
-      turned: topic == 'turnedOn' ? 'ON' : 'OFF',
-      relay: value
-    }})
+    pubsub.publish('SWITCHED', {
+      switched: {
+        turned: topic == 'turnedOn' ? 'ON' : 'OFF',
+        relay: value
+      }
+    })
   })
 
   return {
@@ -20,8 +22,7 @@ module.exports = ({ services }) => {
       console.log('/' + turn, relay.toString())
       return true
     },
-    
+
     switchedSubscription: () => pubsub.asyncIterator('SWITCHED')
   }
-
 }

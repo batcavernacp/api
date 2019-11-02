@@ -1,6 +1,7 @@
 import { CODES } from '../../error'
 import { Mongoose } from 'mongoose'
 import jwt from 'jsonwebtoken'
+const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
 
 module.exports = (mongoose: Mongoose) => {
   const { Schema, model } = mongoose
@@ -21,6 +22,8 @@ module.exports = (mongoose: Mongoose) => {
     }]
   }
   const deviceSchema = new Schema(schema, { timestamps: true })
+
+  deviceSchema.plugin(dataloaderPlugin, { name: 'Device' })
 
   deviceSchema.index({ id: 'text' }, { unique: true })
 
