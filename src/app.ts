@@ -1,9 +1,9 @@
 import express from 'express'
 import { createServer } from 'http'
 import apolloServer from './apollo'
-import schema from './graphql/schema'
 import { assistant } from './google-actions'
 import bodyParser from 'body-parser'
+import { schema } from './graphql/schema'
 
 function authMiddleware (req, res, next): void {
   const buff = Buffer.from(req.headers.authorization.split(' ')[1], 'base64')
@@ -14,10 +14,7 @@ function authMiddleware (req, res, next): void {
   next()
 }
 
-// import cors from 'cors'
 const app = express()
-
-// app.use(cors)
 
 app.get('/graphql/schema', (req, res) => res.send(schema.typeDefs))
 

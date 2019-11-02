@@ -1,7 +1,7 @@
 module.exports = info => {
   const { fieldNodes, fragments } = info
 
-  projection = {}
+  const projection = {}
 
   if (!fieldNodes[0].selectionSet) return info
 

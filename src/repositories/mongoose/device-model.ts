@@ -39,7 +39,7 @@ module.exports = (mongoose: Mongoose) => {
     })
   }
 
-  deviceSchema.statics.hasOwner = async function (_id) {
+  deviceSchema.statics.hasOwner = async function (_id): Promise<boolean> {
     const device = await this.findOne({ _id }, { owner: 1 })
     return !!device.owner
   }

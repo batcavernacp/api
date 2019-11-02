@@ -1,0 +1,10 @@
+directive @owner on FIELD_DEFINITION
+directive @auth on FIELD_DEFINITION
+
+type LoginPayload {
+  user: User!
+}
+
+type Mutation {
+  login: LoginPayload! @auth
+}

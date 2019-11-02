@@ -37,7 +37,7 @@ module.exports = function (schema) {
     }
 
     return {
-      edges: edges.map(({_doc: { _id }})=>({ id: _id })),
+      edges: edges.map(({ _doc: { _id } }) => ({ id: _id })),
       pageInfo: {
         hasNextPage,
         hasPreviousPage

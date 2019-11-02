@@ -1,14 +1,6 @@
-type Query {
-  myDevices: MyDevicesPayolad! @auth
-}
-
 type Mutation {
   registerWithDevice(input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
   checkQRCode (input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
-}
-
-type MyDevicesPayolad {
-  devices: [Device]
 }
 
 input RegisterWithDeviceInput {
@@ -18,10 +10,4 @@ input RegisterWithDeviceInput {
 
 type RegisterWithDevicePayload {
   success: Boolean
-}
-
-type Device implements Node inherits BaseNode{
-  owner: User
-  name: String
-  users: [User]
 }

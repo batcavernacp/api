@@ -1,0 +1,7 @@
+type Query {
+  myDevices: MyDevicesPayload! @auth
+}
+
+type MyDevicesPayload {
+  devices: [Device]
+}

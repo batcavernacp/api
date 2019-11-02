@@ -13,22 +13,12 @@ module.exports = ({ repositories, services }) => {
   }
 
   return {
-    register: async (newUser, token) => {
-      const { uid, email } = await firebase.verifyIdToken(token)
-      return User.register({ uid, email, ...newUser })
-    },
-
     verifyToken,
 
     verifyTokenSubscription: async token => {
       const id = await verifyToken(token)
       if (!id) throw new Error('UNAUTHENTICATED')
       return id
-    },
-
-    checkUsername: async username => {
-      const user = await User.findOne({ username }, { _id: 1 })
-      return !user
     }
   }
 }

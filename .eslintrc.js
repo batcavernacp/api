@@ -12,5 +12,8 @@ module.exports = {
     ecmaVersion: 6,
     project: './tsconfig.json',
     sourceType: 'module'
+  },
+  rules: {
+    'import/no-unresolved': 'off'
   }
 }

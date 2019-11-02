@@ -33,10 +33,17 @@ export default {
       return { uid, email }
     } catch (err) {
       if (err.code == 'auth/argument-error') throw new Error(CODES.INVALID_TOKEN)
-  
+
       if (err.code == 'auth/id-token-expired') throw new Error(CODES.EXPIRED_TOKEN)
-  
+
       throw err
     }
   }
+}
+
+export interface FirebaseService {
+  verifyIdToken: (token: string) => ({
+    uid: string;
+    email: string;
+  });
 }
