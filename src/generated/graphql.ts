@@ -74,7 +74,8 @@ export type MutationSwitchArgs = {
 
 export type MyDevicesPayload = {
    __typename?: 'MyDevicesPayload',
-  devices?: Maybe<Array<Maybe<Device>>>,
+  owned?: Maybe<Array<Maybe<Device>>>,
+  guest?: Maybe<Array<Maybe<Device>>>,
 };
 
 export type Node = {
@@ -301,7 +302,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type MyDevicesPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyDevicesPayload'] = ResolversParentTypes['MyDevicesPayload']> = {
-  devices?: Resolver<Maybe<Array<Maybe<ResolversTypes['Device']>>>, ParentType, ContextType>,
+  owned?: Resolver<Maybe<Array<Maybe<ResolversTypes['Device']>>>, ParentType, ContextType>,
+  guest?: Resolver<Maybe<Array<Maybe<ResolversTypes['Device']>>>, ParentType, ContextType>,
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
