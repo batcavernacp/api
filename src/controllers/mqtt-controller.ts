@@ -1,21 +1,30 @@
-module.exports = ({ services }) => {
+import { Context } from '../apollo'
+
+module.exports = ({ services, repositories }: Context) => {
   const { mqtt, pubsub } = services
 
   mqtt.on('connect', () => {
     mqtt.subscribe('#')
   })
 
-  mqtt.on('message', function (topic, msg, pkt) {
+  mqtt.on('message', async function (topic, msg, pkt) {
     if (!topic.includes('turned')) return
 
-    const value = JSON.parse(msg)
-    console.log({ topic, value })
+    // const value = JSON.parse(msg)
 
-    pubsub.publish('SWITCHED', {
-      switched: {
-        turned: topic === 'turnedOn' ? 'ON' : 'OFF',
-        relay: value
-      }
-    })
+    const turned = topic.includes('turnedOn') ? 'ON' : 'OFF'
+
+    const device = turned === 'ON' ? topic.replace('turnedOn', '') : topic.replace('turnedOff', '')
+
+    try {
+      await pubsub.publish('SWITCHED', {
+        switched: {
+          turned,
+          device
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
   })
 }

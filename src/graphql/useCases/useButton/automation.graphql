@@ -13,10 +13,10 @@ type Mutation {
 }
 
 type SwitchedPayload {
-  turned: SWITCH!
-  relay: Int!
+  turned: SWITCH
+  device: Device
 }
 
 type Subscription {
-  switched: SwitchedPayload!
+  switched: SwitchedPayload
 }
