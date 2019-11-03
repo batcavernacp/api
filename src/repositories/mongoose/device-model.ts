@@ -19,6 +19,9 @@ module.exports = (mongoose: Mongoose) => {
     },
     usersInvited: [{
       type: mongoose.Types.ObjectId
+    }],
+    pendingInvites: [{
+      type: String
     }]
   }
   const deviceSchema = new Schema(schema, { timestamps: true })

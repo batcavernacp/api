@@ -1,0 +1,12 @@
+type Mutation {
+  sendInvite(input: SendInviteInput!): SendInvitePayload! @auth
+}
+
+input SendInviteInput {
+  device: ID!
+  email: String!
+}
+
+type SendInvitePayload {
+  success: Boolean
+}
