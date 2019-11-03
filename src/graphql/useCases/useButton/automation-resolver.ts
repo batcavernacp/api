@@ -2,12 +2,14 @@ import { Context } from '../../../apollo'
 
 exports.resolver = {
   SwitchedPayload: {
-    device: async ({ device }, _, { repositories, services }: Context) => {
-      let deviceId = await services.redis.get(device)
+    device: async ({ device: channel }, _, { repositories, services }: Context) => {
+      if (!channel) return null
+      let deviceId = await services.redis.get(channel)
 
       if (!deviceId) {
-        const d = await repositories.mongoose.models.Device.findOne({ channel: device }, { _id: 1 })
-        await services.redis.set(device, d._id.toString())
+        const d = await repositories.mongoose.models.Device.findOne({ channel }, { _id: 1 })
+        if (!d) throw new Error('asd')
+        await services.redis.set(channel, d._id.toString())
         deviceId = d._id
       }
       return {
