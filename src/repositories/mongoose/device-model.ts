@@ -1,7 +1,22 @@
 import { CODES } from '../../error'
-import { Mongoose } from 'mongoose'
+import { Mongoose, Document, Model } from 'mongoose'
 import jwt from 'jsonwebtoken'
+import { Loader } from '.'
 const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
+
+export interface DeviceDocument extends Document {
+  channel: string;
+  name: string;
+  owner: string;
+  usersInvited: [string];
+  pendingInvites: [string];
+}
+
+export interface DeviceModel extends Model<DeviceDocument>, Loader<DeviceDocument> {
+  register: (channel: string) => DeviceDocument;
+  hasOwner: (_id: string) => Promise<boolean>;
+  getToken: (id: string) => string;
+}
 
 module.exports = (mongoose: Mongoose) => {
   const { Schema, model } = mongoose
@@ -30,8 +45,8 @@ module.exports = (mongoose: Mongoose) => {
 
   deviceSchema.index({ channel: 'text' }, { unique: true })
 
-  deviceSchema.statics.register = function (newDevice) {
-    return this.create(newDevice).catch(err => {
+  deviceSchema.statics.register = function (channel) {
+    return this.create({ channel }).catch(err => {
       console.log(err)
       switch (err.code) {
         case 11000:

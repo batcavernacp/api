@@ -1,7 +1,7 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import { formatError } from './error'
 import services, { Services } from './services'
-import repositories from './repositories'
+import repositories, { Repositories } from './repositories'
 import controller from './controllers'
 import { schema } from './graphql/schema'
 
@@ -27,6 +27,6 @@ export default new ApolloServer({
 export interface Context {
   token: string;
   services: Services;
-  repositories: any;
+  repositories: Repositories;
   user: any;
 }

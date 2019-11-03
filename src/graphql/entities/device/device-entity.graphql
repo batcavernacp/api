@@ -1,6 +1,6 @@
 type Device implements Node inherits BaseNode {
   owner: User
   name: String
-  users: [User]
+  usersInvited: [User]
   pendingInvites: [String]
 }

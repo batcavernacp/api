@@ -1,7 +1,21 @@
 import { CODES } from '../../error'
-import { Mongoose } from 'mongoose'
+import { Mongoose, Document, Model } from 'mongoose'
+import { Loader } from '.'
 const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
 const paginationPlugin = require('./plugins/mongoose-plugin-relay-pagination.js')
+
+export interface UserDocument extends Document {
+  uid: string;
+  email: string;
+  devicesOwned: [string];
+  devicesInvited: [string];
+}
+
+export interface UserModel extends Model<UserDocument>, Loader<UserDocument> {
+  register: (input: any) => UserDocument;
+  get: (params: any, projection: any) => any;
+  getField: (params: any, field: string) => any;
+}
 
 module.exports = (mongoose: Mongoose) => {
   const { Schema, model } = mongoose

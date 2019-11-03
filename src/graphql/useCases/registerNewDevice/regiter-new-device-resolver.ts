@@ -5,7 +5,7 @@ exports.resolver = {
   Mutation: {
     createDevice: async (_, { device }, { repositories }: Context): Promise<CreateDevicePayload> => {
       const { Device } = repositories.mongoose.models
-      const newDevice = await Device.register(device)
+      const newDevice = await Device.register(device.id)
       return {
         token: Device.getToken(newDevice._id)
       }

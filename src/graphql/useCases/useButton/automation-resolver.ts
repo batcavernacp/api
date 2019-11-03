@@ -1,4 +1,5 @@
 import { Context } from '../../../apollo'
+import { CODES } from '../../../error'
 
 exports.resolver = {
   SwitchedPayload: {
@@ -30,6 +31,7 @@ exports.resolver = {
         channel += topic
       } else {
         const device = await repositories.mongoose.models.Device.findOne({ _id: input.device }, { channel: 1 })
+        if (!device) throw new Error(CODES.NOT_FOUND)
         channel += device.channel
         redis.set(input.device, device.channel)
       }
