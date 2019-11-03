@@ -23,6 +23,11 @@ type Payload {
   error: String
 }
 
+type ResponsePayload {
+  success: Boolean!
+  error: String
+}
+
 @alias((T) => T + 'Connection')
 type Connection<T> {
 	edges: [Edge<T>!]!

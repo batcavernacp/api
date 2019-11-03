@@ -1,0 +1,9 @@
+type Mutation {
+  checkEmail (input: CheckEmailInput!): ResponsePayload!
+}
+
+input CheckEmailInput {
+  email: String!
+}
+
+
