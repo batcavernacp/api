@@ -29,7 +29,7 @@ module.exports = (mongoose: Mongoose) => {
   userSchema.plugin(paginationPlugin)
 
   userSchema.index({ uid: 'text' }, { unique: true })
-  userSchema.index({ username: 'text' }, { unique: true })
+  userSchema.index({ email: 'text' }, { unique: true })
 
   userSchema.statics.register = function (newUser) {
     return this.create(newUser).catch(err => {
