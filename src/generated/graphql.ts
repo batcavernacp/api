@@ -19,6 +19,10 @@ export type BaseNode = {
   updatedAt?: Maybe<Scalars['String']>,
 };
 
+export type CheckEmailInput = {
+  email: Scalars['String'],
+};
+
 export type CreateDeviceInput = {
   id?: Maybe<Scalars['String']>,
 };
@@ -33,6 +37,7 @@ export type Device = Node & {
   owner?: Maybe<User>,
   name?: Maybe<Scalars['String']>,
   users?: Maybe<Array<Maybe<User>>>,
+  pendingInvites?: Maybe<Array<Maybe<Scalars['String']>>>,
   id: Scalars['ID'],
   createdAt?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['String']>,
@@ -46,10 +51,17 @@ export type LoginPayload = {
 export type Mutation = {
    __typename?: 'Mutation',
   login: LoginPayload,
+  checkEmail: ResponsePayload,
   createDevice: CreateDevicePayload,
   registerWithDevice: RegisterWithDevicePayload,
   checkQRCode: RegisterWithDevicePayload,
+  sendInvite: SendInvitePayload,
   switch?: Maybe<Scalars['Boolean']>,
+};
+
+
+export type MutationCheckEmailArgs = {
+  input: CheckEmailInput
 };
 
 
@@ -65,6 +77,11 @@ export type MutationRegisterWithDeviceArgs = {
 
 export type MutationCheckQrCodeArgs = {
   input: RegisterWithDeviceInput
+};
+
+
+export type MutationSendInviteArgs = {
+  input: SendInviteInput
 };
 
 
@@ -116,9 +133,25 @@ export type RegisterWithDevicePayload = {
   success?: Maybe<Scalars['Boolean']>,
 };
 
+export type ResponsePayload = {
+   __typename?: 'ResponsePayload',
+  success: Scalars['Boolean'],
+  error?: Maybe<Scalars['String']>,
+};
+
+export type SendInviteInput = {
+  device: Scalars['ID'],
+  email: Scalars['String'],
+};
+
+export type SendInvitePayload = {
+   __typename?: 'SendInvitePayload',
+  success?: Maybe<Scalars['Boolean']>,
+};
+
 export type Subscription = {
    __typename?: 'Subscription',
-  switched: SwitchedPayload,
+  switched?: Maybe<SwitchedPayload>,
 };
 
 export enum Switch {
@@ -128,13 +161,13 @@ export enum Switch {
 
 export type SwitchedPayload = {
    __typename?: 'SwitchedPayload',
-  turned: Switch,
-  relay: Scalars['Int'],
+  turned?: Maybe<Switch>,
+  device?: Maybe<Device>,
 };
 
 export type SwitchInput = {
   turn: Switch,
-  relay: Scalars['Int'],
+  device: Scalars['ID'],
 };
 
 export type User = Node & {
@@ -225,14 +258,17 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>,
   Mutation: ResolverTypeWrapper<{}>,
   LoginPayload: ResolverTypeWrapper<LoginPayload>,
+  CheckEmailInput: CheckEmailInput,
+  ResponsePayload: ResolverTypeWrapper<ResponsePayload>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: ResolverTypeWrapper<CreateDevicePayload>,
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   RegisterWithDevicePayload: ResolverTypeWrapper<RegisterWithDevicePayload>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  SendInviteInput: SendInviteInput,
+  SendInvitePayload: ResolverTypeWrapper<SendInvitePayload>,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
-  Int: ResolverTypeWrapper<Scalars['Int']>,
   Subscription: ResolverTypeWrapper<{}>,
   SwitchedPayload: ResolverTypeWrapper<SwitchedPayload>,
   BaseNode: ResolverTypeWrapper<BaseNode>,
@@ -251,14 +287,17 @@ export type ResolversParentTypes = {
   String: Scalars['String'],
   Mutation: {},
   LoginPayload: LoginPayload,
+  CheckEmailInput: CheckEmailInput,
+  ResponsePayload: ResponsePayload,
+  Boolean: Scalars['Boolean'],
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: CreateDevicePayload,
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   RegisterWithDevicePayload: RegisterWithDevicePayload,
-  Boolean: Scalars['Boolean'],
+  SendInviteInput: SendInviteInput,
+  SendInvitePayload: SendInvitePayload,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
-  Int: Scalars['Int'],
   Subscription: {},
   SwitchedPayload: SwitchedPayload,
   BaseNode: BaseNode,
@@ -284,6 +323,7 @@ export type DeviceResolvers<ContextType = any, ParentType extends ResolversParen
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
+  pendingInvites?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -295,9 +335,11 @@ export type LoginPayloadResolvers<ContextType = any, ParentType extends Resolver
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   login?: Resolver<ResolversTypes['LoginPayload'], ParentType, ContextType>,
+  checkEmail?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCheckEmailArgs, 'input'>>,
   createDevice?: Resolver<ResolversTypes['CreateDevicePayload'], ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'device'>>,
   registerWithDevice?: Resolver<ResolversTypes['RegisterWithDevicePayload'], ParentType, ContextType, RequireFields<MutationRegisterWithDeviceArgs, 'input'>>,
   checkQRCode?: Resolver<ResolversTypes['RegisterWithDevicePayload'], ParentType, ContextType, RequireFields<MutationCheckQrCodeArgs, 'input'>>,
+  sendInvite?: Resolver<ResolversTypes['SendInvitePayload'], ParentType, ContextType, RequireFields<MutationSendInviteArgs, 'input'>>,
   switch?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSwitchArgs, 'input'>>,
 };
 
@@ -331,13 +373,22 @@ export type RegisterWithDevicePayloadResolvers<ContextType = any, ParentType ext
   success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
 };
 
+export type ResponsePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponsePayload'] = ResolversParentTypes['ResponsePayload']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+};
+
+export type SendInvitePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SendInvitePayload'] = ResolversParentTypes['SendInvitePayload']> = {
+  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+};
+
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  switched?: SubscriptionResolver<ResolversTypes['SwitchedPayload'], "switched", ParentType, ContextType>,
+  switched?: SubscriptionResolver<Maybe<ResolversTypes['SwitchedPayload']>, "switched", ParentType, ContextType>,
 };
 
 export type SwitchedPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SwitchedPayload'] = ResolversParentTypes['SwitchedPayload']> = {
-  turned?: Resolver<ResolversTypes['SWITCH'], ParentType, ContextType>,
-  relay?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  turned?: Resolver<Maybe<ResolversTypes['SWITCH']>, ParentType, ContextType>,
+  device?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType>,
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -359,6 +410,8 @@ export type Resolvers<ContextType = any> = {
   Payload?: PayloadResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   RegisterWithDevicePayload?: RegisterWithDevicePayloadResolvers<ContextType>,
+  ResponsePayload?: ResponsePayloadResolvers<ContextType>,
+  SendInvitePayload?: SendInvitePayloadResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   SwitchedPayload?: SwitchedPayloadResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
