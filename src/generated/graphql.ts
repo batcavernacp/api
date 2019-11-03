@@ -52,6 +52,7 @@ export type Mutation = {
    __typename?: 'Mutation',
   login: LoginPayload,
   checkEmail: ResponsePayload,
+  registerWithInvite: ResponsePayload,
   createDevice: CreateDevicePayload,
   registerWithDevice: RegisterWithDevicePayload,
   checkQRCode: RegisterWithDevicePayload,
@@ -61,6 +62,11 @@ export type Mutation = {
 
 
 export type MutationCheckEmailArgs = {
+  input: CheckEmailInput
+};
+
+
+export type MutationRegisterWithInviteArgs = {
   input: CheckEmailInput
 };
 
@@ -131,6 +137,10 @@ export type RegisterWithDeviceInput = {
 export type RegisterWithDevicePayload = {
    __typename?: 'RegisterWithDevicePayload',
   success?: Maybe<Scalars['Boolean']>,
+};
+
+export type RegisterWithInviteInput = {
+  email: Scalars['String'],
 };
 
 export type ResponsePayload = {
@@ -274,6 +284,7 @@ export type ResolversTypes = {
   BaseNode: ResolverTypeWrapper<BaseNode>,
   PageInfo: ResolverTypeWrapper<PageInfo>,
   Payload: ResolverTypeWrapper<Payload>,
+  RegisterWithInviteInput: RegisterWithInviteInput,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -303,6 +314,7 @@ export type ResolversParentTypes = {
   BaseNode: BaseNode,
   PageInfo: PageInfo,
   Payload: Payload,
+  RegisterWithInviteInput: RegisterWithInviteInput,
 };
 
 export type OwnerDirectiveResolver<Result, Parent, ContextType = any, Args = {  }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -336,6 +348,7 @@ export type LoginPayloadResolvers<ContextType = any, ParentType extends Resolver
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   login?: Resolver<ResolversTypes['LoginPayload'], ParentType, ContextType>,
   checkEmail?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCheckEmailArgs, 'input'>>,
+  registerWithInvite?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationRegisterWithInviteArgs, 'input'>>,
   createDevice?: Resolver<ResolversTypes['CreateDevicePayload'], ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'device'>>,
   registerWithDevice?: Resolver<ResolversTypes['RegisterWithDevicePayload'], ParentType, ContextType, RequireFields<MutationRegisterWithDeviceArgs, 'input'>>,
   checkQRCode?: Resolver<ResolversTypes['RegisterWithDevicePayload'], ParentType, ContextType, RequireFields<MutationCheckQrCodeArgs, 'input'>>,
