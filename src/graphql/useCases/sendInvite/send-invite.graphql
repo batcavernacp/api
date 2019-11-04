@@ -1,5 +1,6 @@
 type Mutation {
   sendInvite(input: SendInviteInput!): SendInvitePayload! @auth
+  cancelInvite(input: SendInviteInput!): ResponsePayload! @auth
 }
 
 input SendInviteInput {
