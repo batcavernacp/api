@@ -1,5 +1,7 @@
 import { Context } from '../../../apollo'
 import { CODES } from '../../../error'
+import { SwitchInput } from '../../../generated/graphql'
+import { Input } from '../../schema'
 
 exports.resolver = {
   SwitchedPayload: {
@@ -21,7 +23,7 @@ exports.resolver = {
   },
 
   Mutation: {
-    switch: async (_, { input }, { services, repositories }: Context) => {
+    switch: async (_, { input }: Input<SwitchInput>, { services, repositories }: Context): Promise<boolean> => {
       const { redis } = services
       // TODO: check if user is allowed to use device
       const topic = await redis.get(input.device)

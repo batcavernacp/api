@@ -1,10 +1,6 @@
 type Mutation {
   checkEmail (input: CheckEmailInput!): ResponsePayload!
-  registerWithInvite: RegisterInvitePayload!
-}
-
-type RegisterInvitePayload inherits ResponsePayload {
-  user: User
+  registerWithInvite: ResponsePayload!
 }
 
 input CheckEmailInput {

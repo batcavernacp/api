@@ -1,5 +1,5 @@
 import { Context } from '../../../apollo'
-import { MyDevicesPayload, Device } from '../../../generated/graphql'
+import { MyDevicesPayload } from '../../../generated/graphql'
 
 exports.resolver = {
   MyDevicesPayload: {

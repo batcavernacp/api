@@ -1,9 +1,12 @@
 import { CODES } from '../../../error'
 import { Context } from '../../../apollo'
+import { ResponsePayload } from '../../../generated/graphql'
 
 exports.resolver = {
   Mutation: {
-    registerWithInvite: async (_, params, { repositories, token, services }: Context) => {
+    registerWithInvite: async (_, params, { repositories, token, services }: Context): Promise<ResponsePayload> => {
+      if (!token) throw new Error(CODES.UNAUTHENTICATED)
+
       const { Device, User } = repositories.mongoose.models
       const { firebase } = services
 
@@ -24,8 +27,7 @@ exports.resolver = {
         })
 
         return {
-          success: true,
-          user
+          success: true
         }
       } catch (err) {
         return {

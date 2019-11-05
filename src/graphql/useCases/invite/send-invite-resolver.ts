@@ -1,14 +1,11 @@
 import { Context } from '../../../apollo'
-import { SendInviteInput } from '../../../generated/graphql'
+import { SendInviteInput, ResponsePayload } from '../../../generated/graphql'
 import { CODES } from '../../../error'
-
-interface SendInviteInputA {
-  input: SendInviteInput;
-}
+import { Input } from '../../schema'
 
 exports.resolver = {
   Mutation: {
-    sendInvite: async (_, { input }: SendInviteInputA, { repositories, user }: Context) => {
+    sendInvite: async (_, { input }: Input<SendInviteInput>, { repositories, user }: Context): Promise<ResponsePayload> => {
       const { device, email } = input
       const { Device, User } = repositories.mongoose.models
 

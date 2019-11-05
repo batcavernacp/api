@@ -2,6 +2,25 @@ type Query {
   myDevices: MyDevicesPayload! @auth
 }
 
+type Mutation {
+  removeUser(input: RemoveUserInput!): ResponsePayload! @auth
+  registerNewDevice(input: RegisterNewDeviceInput!): RegisterNewDevicePayload! @auth
+}
+
+input RegisterNewDeviceInput {
+  qrcode: String!
+  name: String!
+}
+
+type RegisterNewDevicePayload inherits ResponsePayload {
+  device: Device
+}
+
+input RemoveUserInput {
+  device: ID!
+  user: ID!
+}
+
 type MyDevicesPayload {
   owned: [Device]
   guest: [Device]

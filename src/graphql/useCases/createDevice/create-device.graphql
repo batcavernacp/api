@@ -1,9 +1,9 @@
 input CreateDeviceInput {
-  id: String
+  device: ID!
 }
 
 type Mutation {
-  createDevice(device: CreateDeviceInput!): CreateDevicePayload!
+  createDevice(input: CreateDeviceInput!): CreateDevicePayload!
 }
 
 type CreateDevicePayload {

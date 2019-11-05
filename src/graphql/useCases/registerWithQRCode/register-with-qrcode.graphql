@@ -1,13 +1,9 @@
 type Mutation {
-  registerWithDevice(input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
-  checkQRCode (input: RegisterWithDeviceInput!): RegisterWithDevicePayload!
+  registerWithDevice(input: RegisterWithDeviceInput!): ResponsePayload!
+  checkQRCode (input: RegisterWithDeviceInput!): ResponsePayload!
 }
 
 input RegisterWithDeviceInput {
   qrcode: String!
   name: String
-}
-
-type RegisterWithDevicePayload {
-  success: Boolean
 }

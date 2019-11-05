@@ -1,11 +1,14 @@
 import jwt from 'jsonwebtoken'
 import { CODES } from '../../../error'
-import { RegisterWithDevicePayload } from '../../../generated/graphql'
+import { RegisterWithDeviceInput, ResponsePayload } from '../../../generated/graphql'
 import { Context } from '../../../apollo'
+import { Input } from '../../schema'
 
 exports.resolver = {
   Mutation: {
-    registerWithDevice: async (_, { input }, { token, repositories, services }: Context): Promise<RegisterWithDevicePayload> => {
+    registerWithDevice: async (_, { input }: Input<RegisterWithDeviceInput>, { token, repositories, services }: Context): Promise<ResponsePayload> => {
+      if (!token) throw new Error(CODES.UNAUTHENTICATED)
+
       const { qrcode, name } = input
       const { Device, User } = repositories.mongoose.models
       const { firebase } = services

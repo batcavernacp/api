@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { CODES } from '../../../error'
+import { RegisterWithDeviceInput, ResponsePayload } from '../../../generated/graphql'
+import { Input } from '../../schema'
 
 exports.resolver = {
   Mutation: {
-    checkQRCode: async (_, { input }, { repositories }) => {
+    checkQRCode: async (_, { input }: Input<RegisterWithDeviceInput>, { repositories }): Promise<ResponsePayload> => {
       const { qrcode } = input
       const { Device } = repositories.mongoose.models
       try {

@@ -25,8 +25,8 @@ export default new ApolloServer({
 })
 
 export interface Context {
-  token: string;
+  token?: string;
   services: Services;
   repositories: Repositories;
-  user: any;
+  user?: any;
 }

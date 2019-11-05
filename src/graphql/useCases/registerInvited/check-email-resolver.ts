@@ -1,10 +1,11 @@
 import { CODES } from '../../../error'
-import { ResponsePayload } from '../../../generated/graphql'
+import { ResponsePayload, CheckEmailInput } from '../../../generated/graphql'
 import { Context } from '../../../apollo'
+import { Input } from '../../schema'
 
 exports.resolver = {
   Mutation: {
-    checkEmail: async (_, { input }, { repositories }: Context): Promise<ResponsePayload> => {
+    checkEmail: async (_, { input }: Input<CheckEmailInput>, { repositories }: Context): Promise<ResponsePayload> => {
       const { email } = input
       const { Device } = repositories.mongoose.models
 

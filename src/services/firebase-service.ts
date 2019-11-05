@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { CODES } from '../error'
 const admin = require('firebase-admin')
-// const { INVALID_TOKEN, EXPIRED_TOKEN } = require('../../../express-graphql/src/error').CODES
 
 /* istanbul ignore else */
 // if (process.env.NODE_ENV.includes('test')) { // mocking for tests
@@ -32,9 +32,9 @@ export default {
       const { uid, email } = await admin.auth().verifyIdToken(token)
       return { uid, email }
     } catch (err) {
-      if (err.code == 'auth/argument-error') throw new Error(CODES.INVALID_TOKEN)
+      if (err.code === 'auth/argument-error') throw new Error(CODES.INVALID_TOKEN)
 
-      if (err.code == 'auth/id-token-expired') throw new Error(CODES.EXPIRED_TOKEN)
+      if (err.code === 'auth/id-token-expired') throw new Error(CODES.EXPIRED_TOKEN)
 
       throw err
     }
