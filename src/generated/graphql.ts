@@ -57,8 +57,8 @@ export type Mutation = {
   removeUser: ResponsePayload,
   registerNewDevice: RegisterNewDevicePayload,
   checkEmail: ResponsePayload,
-  registerWithInvite: ResponsePayload,
-  registerWithDevice: ResponsePayload,
+  registerWithInvite: RegisterUserPayload,
+  registerWithDevice: RegisterUserPayload,
   checkQRCode: ResponsePayload,
   switch?: Maybe<Scalars['Boolean']>,
 };
@@ -150,6 +150,13 @@ export type RegisterNewDeviceInput = {
 export type RegisterNewDevicePayload = {
    __typename?: 'RegisterNewDevicePayload',
   device?: Maybe<Device>,
+  success: Scalars['Boolean'],
+  error?: Maybe<Scalars['String']>,
+};
+
+export type RegisterUserPayload = {
+   __typename?: 'RegisterUserPayload',
+  user?: Maybe<User>,
   success: Scalars['Boolean'],
   error?: Maybe<Scalars['String']>,
 };
@@ -293,6 +300,7 @@ export type ResolversTypes = {
   RegisterNewDeviceInput: RegisterNewDeviceInput,
   RegisterNewDevicePayload: ResolverTypeWrapper<RegisterNewDevicePayload>,
   CheckEmailInput: CheckEmailInput,
+  RegisterUserPayload: ResolverTypeWrapper<RegisterUserPayload>,
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
@@ -323,6 +331,7 @@ export type ResolversParentTypes = {
   RegisterNewDeviceInput: RegisterNewDeviceInput,
   RegisterNewDevicePayload: RegisterNewDevicePayload,
   CheckEmailInput: CheckEmailInput,
+  RegisterUserPayload: RegisterUserPayload,
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
@@ -369,8 +378,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeUser?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>,
   registerNewDevice?: Resolver<ResolversTypes['RegisterNewDevicePayload'], ParentType, ContextType, RequireFields<MutationRegisterNewDeviceArgs, 'input'>>,
   checkEmail?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCheckEmailArgs, 'input'>>,
-  registerWithInvite?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType>,
-  registerWithDevice?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationRegisterWithDeviceArgs, 'input'>>,
+  registerWithInvite?: Resolver<ResolversTypes['RegisterUserPayload'], ParentType, ContextType>,
+  registerWithDevice?: Resolver<ResolversTypes['RegisterUserPayload'], ParentType, ContextType, RequireFields<MutationRegisterWithDeviceArgs, 'input'>>,
   checkQRCode?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCheckQrCodeArgs, 'input'>>,
   switch?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSwitchArgs, 'input'>>,
 };
@@ -403,6 +412,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type RegisterNewDevicePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterNewDevicePayload'] = ResolversParentTypes['RegisterNewDevicePayload']> = {
   device?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType>,
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+};
+
+export type RegisterUserPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterUserPayload'] = ResolversParentTypes['RegisterUserPayload']> = {
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 };
@@ -440,6 +455,7 @@ export type Resolvers<ContextType = any> = {
   Payload?: PayloadResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   RegisterNewDevicePayload?: RegisterNewDevicePayloadResolvers<ContextType>,
+  RegisterUserPayload?: RegisterUserPayloadResolvers<ContextType>,
   ResponsePayload?: ResponsePayloadResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   SwitchedPayload?: SwitchedPayloadResolvers<ContextType>,
