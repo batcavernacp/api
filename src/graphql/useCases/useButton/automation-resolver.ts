@@ -23,20 +23,30 @@ exports.resolver = {
   },
 
   Mutation: {
-    switch: async (_, { input }: Input<SwitchInput>, { services, repositories }: Context): Promise<boolean> => {
+    switch: async (_, { input }: Input<SwitchInput>, { services, repositories, user }: Context): Promise<boolean> => {
       const { redis } = services
-      // TODO: check if user is allowed to use device
-      const topic = await redis.get(input.device)
+      let topic = await redis.get(input.device)
 
       let channel = '/' + input.turn
-      if (topic) {
-        channel += topic
-      } else {
+
+      if (!topic) {
         const device = await repositories.mongoose.models.Device.findOne({ _id: input.device }, { channel: 1 })
         if (!device) throw new Error(CODES.NOT_FOUND)
-        channel += device.channel
+        topic = device.channel
         redis.set(input.device, device.channel)
       }
+
+      // todo: improve speed
+      const device = await repositories.mongoose.models.Device.findOne({
+        $and: [{
+          _id: input.device,
+          $or: [{ usersInvited: user }, { owner: user }]
+        }]
+      }, { _id: 1 })
+
+      if (!device) throw new Error(CODES.UNAUTHORIZED)
+
+      channel += topic
 
       services.mqtt.publish(channel, '1')
       console.log(channel, '1')
