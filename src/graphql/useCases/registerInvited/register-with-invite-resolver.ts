@@ -1,10 +1,10 @@
 import { CODES } from '../../../error'
 import { Context } from '../../../apollo'
-import { ResponsePayload } from '../../../generated/graphql'
+import { RegisterUserPayload } from '../../../generated/graphql'
 
 exports.resolver = {
   Mutation: {
-    registerWithInvite: async (_, params, { repositories, token, services }: Context): Promise<ResponsePayload> => {
+    registerWithInvite: async (_, params, { repositories, token, services }: Context): Promise<RegisterUserPayload> => {
       if (!token) throw new Error(CODES.UNAUTHENTICATED)
 
       const { Device, User } = repositories.mongoose.models
@@ -27,7 +27,8 @@ exports.resolver = {
         })
 
         return {
-          success: true
+          success: true,
+          user: { id: user._id }
         }
       } catch (err) {
         return {

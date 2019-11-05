@@ -1,12 +1,18 @@
 import jwt from 'jsonwebtoken'
 import { CODES } from '../../../error'
-import { RegisterWithDeviceInput, ResponsePayload } from '../../../generated/graphql'
+import { RegisterWithDeviceInput, RegisterUserPayload } from '../../../generated/graphql'
 import { Context } from '../../../apollo'
 import { Input } from '../../schema'
+import { UserDocument } from '../../../repositories/mongoose/user-model'
 
 exports.resolver = {
+  RegisterUserPayload: {
+    user: ({ user }: RegisterUserPayload, _, { repositories }: Context, info): Promise<UserDocument> | null =>
+      user ? repositories.mongoose.models.User.load(user.id, info) : null
+  },
+
   Mutation: {
-    registerWithDevice: async (_, { input }: Input<RegisterWithDeviceInput>, { token, repositories, services }: Context): Promise<ResponsePayload> => {
+    registerWithDevice: async (_, { input }: Input<RegisterWithDeviceInput>, { token, repositories, services }: Context): Promise<RegisterUserPayload> => {
       if (!token) throw new Error(CODES.UNAUTHENTICATED)
 
       const { qrcode, name } = input
@@ -27,7 +33,10 @@ exports.resolver = {
 
         await Device.updateOne({ _id: decoded.id }, { $set: { owner: user._id, name: name } })
 
-        return { success: true }
+        return {
+          success: true,
+          user: { id: user._id }
+        }
       } catch (err) {
         return {
           success: false
