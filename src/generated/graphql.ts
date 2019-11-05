@@ -51,7 +51,7 @@ export type LoginPayload = {
 export type Mutation = {
    __typename?: 'Mutation',
   createDevice: CreateDevicePayload,
-  sendInvite: ResponsePayload,
+  sendInvite: SendInvitePayload,
   cancelInvite: ResponsePayload,
   login: LoginPayload,
   removeUser: ResponsePayload,
@@ -182,6 +182,13 @@ export type SendInviteInput = {
   email: Scalars['String'],
 };
 
+export type SendInvitePayload = {
+   __typename?: 'SendInvitePayload',
+  user?: Maybe<User>,
+  success: Scalars['Boolean'],
+  error?: Maybe<Scalars['String']>,
+};
+
 export type Subscription = {
    __typename?: 'Subscription',
   switched?: Maybe<SwitchedPayload>,
@@ -293,8 +300,9 @@ export type ResolversTypes = {
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: ResolverTypeWrapper<CreateDevicePayload>,
   SendInviteInput: SendInviteInput,
-  ResponsePayload: ResolverTypeWrapper<ResponsePayload>,
+  SendInvitePayload: ResolverTypeWrapper<SendInvitePayload>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  ResponsePayload: ResolverTypeWrapper<ResponsePayload>,
   LoginPayload: ResolverTypeWrapper<LoginPayload>,
   RemoveUserInput: RemoveUserInput,
   RegisterNewDeviceInput: RegisterNewDeviceInput,
@@ -324,8 +332,9 @@ export type ResolversParentTypes = {
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: CreateDevicePayload,
   SendInviteInput: SendInviteInput,
-  ResponsePayload: ResponsePayload,
+  SendInvitePayload: SendInvitePayload,
   Boolean: Scalars['Boolean'],
+  ResponsePayload: ResponsePayload,
   LoginPayload: LoginPayload,
   RemoveUserInput: RemoveUserInput,
   RegisterNewDeviceInput: RegisterNewDeviceInput,
@@ -372,7 +381,7 @@ export type LoginPayloadResolvers<ContextType = any, ParentType extends Resolver
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createDevice?: Resolver<ResolversTypes['CreateDevicePayload'], ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'input'>>,
-  sendInvite?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationSendInviteArgs, 'input'>>,
+  sendInvite?: Resolver<ResolversTypes['SendInvitePayload'], ParentType, ContextType, RequireFields<MutationSendInviteArgs, 'input'>>,
   cancelInvite?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCancelInviteArgs, 'input'>>,
   login?: Resolver<ResolversTypes['LoginPayload'], ParentType, ContextType>,
   removeUser?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>,
@@ -427,6 +436,12 @@ export type ResponsePayloadResolvers<ContextType = any, ParentType extends Resol
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 };
 
+export type SendInvitePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SendInvitePayload'] = ResolversParentTypes['SendInvitePayload']> = {
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+};
+
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   switched?: SubscriptionResolver<Maybe<ResolversTypes['SwitchedPayload']>, "switched", ParentType, ContextType>,
 };
@@ -457,6 +472,7 @@ export type Resolvers<ContextType = any> = {
   RegisterNewDevicePayload?: RegisterNewDevicePayloadResolvers<ContextType>,
   RegisterUserPayload?: RegisterUserPayloadResolvers<ContextType>,
   ResponsePayload?: ResponsePayloadResolvers<ContextType>,
+  SendInvitePayload?: SendInvitePayloadResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   SwitchedPayload?: SwitchedPayloadResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
