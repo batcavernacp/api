@@ -1,6 +1,6 @@
 import { Context } from '../../../apollo'
 import { CODES } from '../../../error'
-import { SwitchInput } from '../../../generated/graphql'
+import { SwitchInput, LogAction } from '../../../generated/graphql'
 import { Input } from '../../schema'
 
 exports.resolver = {
@@ -25,19 +25,20 @@ exports.resolver = {
   Mutation: {
     switch: async (_, { input }: Input<SwitchInput>, { services, repositories, user }: Context): Promise<boolean> => {
       const { redis } = services
+      const { Device, Log } = repositories.mongoose.models
       let topic = await redis.get(input.device)
 
       let channel = '/' + input.turn
 
       if (!topic) {
-        const device = await repositories.mongoose.models.Device.findOne({ _id: input.device }, { channel: 1 })
+        const device = await Device.findOne({ _id: input.device }, { channel: 1 })
         if (!device) throw new Error(CODES.NOT_FOUND)
         topic = device.channel
         redis.set(input.device, device.channel)
       }
 
       // todo: improve speed
-      const device = await repositories.mongoose.models.Device.findOne({
+      const device = await Device.findOne({
         $and: [{
           _id: input.device,
           $or: [{ usersInvited: user }, { owner: user }]
@@ -49,7 +50,12 @@ exports.resolver = {
       channel += topic
 
       services.mqtt.publish(channel, '1')
-      console.log(channel, '1')
+
+      await Log.log({
+        user,
+        device: device._id,
+        action: input.turn === 'ON' ? LogAction.On : LogAction.Off
+      })
       return true
     }
   },
