@@ -2,6 +2,7 @@ import { Context } from '../../../apollo'
 import { SendInviteInput, SendInvitePayload } from '../../../generated/graphql'
 import { CODES } from '../../../error'
 import { Input } from '../../schema'
+import { fromGlobalId } from 'graphql-relay'
 
 exports.resolver = {
   SendInvitePayload: {
@@ -10,9 +11,12 @@ exports.resolver = {
   },
   Mutation: {
     sendInvite: async (_, { input }: Input<SendInviteInput>, { repositories, user }: Context): Promise<SendInvitePayload> => {
-      const { device, email } = input
-      const { Device, User } = repositories.mongoose.models
+      const { email } = input
 
+      const device = fromGlobalId(input.device).id
+      // check type
+
+      const { Device, User } = repositories.mongoose.models
       const dev = await Device.findOne({ _id: device, owner: user }, { _id: 1 })
 
       if (!dev) throw new Error(CODES.UNAUTHORIZED)

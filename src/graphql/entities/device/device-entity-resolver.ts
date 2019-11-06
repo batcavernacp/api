@@ -5,26 +5,28 @@ import { toGlobalId } from 'graphql-relay'
 
 exports.resolver = {
   Device: {
+    id: ({ id }) => toGlobalId('Device', id),
+
     owner: ({ _doc }, _, { repositories }: Context, info) =>
       repositories.mongoose.models.Device.load(_doc.owner, info),
 
     usersInvited: ({ _doc }, _, { repositories }, info) =>
       repositories.mongoose.models.User.loadMany(_doc.usersInvited, info),
 
-    logs: ({ _doc }, page: PageInput, { repositories }: Context): LogConnection =>
+    logs: ({ _doc, id }, page: PageInput, { repositories }: Context): LogConnection =>
       repositories.mongoose.models.Log.getPage({
         ...page,
         params: {
-          device: _doc._id
+          device: id || _doc._id
         }
       })
   },
 
   LogEdge: {
-    node: ({ id }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.Log.load(id, info),
+    cursor: ({ id }) => toGlobalId('Log', id),
 
-    cursor: ({ id }) => toGlobalId('Log', id)
+    node: ({ id }, _, { repositories }: Context, info) =>
+      repositories.mongoose.models.Log.load(id, info)
   },
 
   Log: {

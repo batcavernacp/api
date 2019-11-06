@@ -2,6 +2,7 @@ import { Context } from '../../../apollo'
 import { CODES } from '../../../error'
 import { SwitchInput, LogAction } from '../../../generated/graphql'
 import { Input } from '../../schema'
+import { fromGlobalId } from 'graphql-relay'
 
 exports.resolver = {
   SwitchedPayload: {
@@ -29,6 +30,8 @@ exports.resolver = {
       let topic = await redis.get(input.device)
 
       let channel = '/' + input.turn
+
+      input.device = fromGlobalId(input.device).id
 
       if (!topic) {
         const device = await Device.findOne({ _id: input.device }, { channel: 1 })

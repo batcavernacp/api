@@ -2,7 +2,8 @@ import { fromGlobalId, toGlobalId, ResolvedGlobalId } from 'graphql-relay'
 import { CODES } from '../error'
 
 const nodes = {
-  User: 'User'
+  User: 'User',
+  Device: 'Device'
 }
 
 exports.resolver = {

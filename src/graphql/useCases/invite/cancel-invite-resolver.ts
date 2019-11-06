@@ -1,11 +1,15 @@
 import { Context } from '../../../apollo'
 import { SendInviteInput, ResponsePayload } from '../../../generated/graphql'
 import { Input } from '../../schema'
+import { fromGlobalId } from 'graphql-relay'
 
 exports.resolver = {
   Mutation: {
     cancelInvite: async (_, { input }: Input<SendInviteInput>, { repositories, user }: Context): Promise<ResponsePayload> => {
-      const { device, email } = input
+      const { email } = input
+
+      const device = fromGlobalId(input.device).id
+
       const { Device } = repositories.mongoose.models
 
       try {
