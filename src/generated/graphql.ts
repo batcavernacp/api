@@ -38,9 +38,44 @@ export type Device = Node & {
   name?: Maybe<Scalars['String']>,
   usersInvited?: Maybe<Array<Maybe<User>>>,
   pendingInvites?: Maybe<Array<Maybe<Scalars['String']>>>,
+  log?: Maybe<LogConnection>,
   id: Scalars['ID'],
   createdAt?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['String']>,
+};
+
+
+export type DeviceLogArgs = {
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+export type Log = Node & {
+   __typename?: 'Log',
+  id: Scalars['ID'],
+  user?: Maybe<User>,
+  action?: Maybe<LogAction>,
+};
+
+export enum LogAction {
+  On = 'ON',
+  Off = 'OFF',
+  RemoveUser = 'REMOVE_USER',
+  InviteUser = 'INVITE_USER'
+}
+
+export type LogConnection = {
+   __typename?: 'LogConnection',
+  edges: Array<Maybe<LogEdge>>,
+  pageInfo: PageInfo,
+};
+
+export type LogEdge = {
+   __typename?: 'LogEdge',
+  cursor?: Maybe<Scalars['String']>,
+  node?: Maybe<Log>,
 };
 
 export type LoginPayload = {
@@ -296,12 +331,18 @@ export type ResolversTypes = {
   Device: ResolverTypeWrapper<Device>,
   User: ResolverTypeWrapper<User>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  LogConnection: ResolverTypeWrapper<LogConnection>,
+  LogEdge: ResolverTypeWrapper<LogEdge>,
+  Log: ResolverTypeWrapper<Log>,
+  LogAction: LogAction,
+  PageInfo: ResolverTypeWrapper<PageInfo>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Mutation: ResolverTypeWrapper<{}>,
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: ResolverTypeWrapper<CreateDevicePayload>,
   SendInviteInput: SendInviteInput,
   SendInvitePayload: ResolverTypeWrapper<SendInvitePayload>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   ResponsePayload: ResolverTypeWrapper<ResponsePayload>,
   LoginPayload: ResolverTypeWrapper<LoginPayload>,
   RemoveUserInput: RemoveUserInput,
@@ -315,7 +356,6 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>,
   SwitchedPayload: ResolverTypeWrapper<SwitchedPayload>,
   BaseNode: ResolverTypeWrapper<BaseNode>,
-  PageInfo: ResolverTypeWrapper<PageInfo>,
   Payload: ResolverTypeWrapper<Payload>,
 };
 
@@ -328,12 +368,18 @@ export type ResolversParentTypes = {
   Device: Device,
   User: User,
   String: Scalars['String'],
+  Int: Scalars['Int'],
+  LogConnection: LogConnection,
+  LogEdge: LogEdge,
+  Log: Log,
+  LogAction: LogAction,
+  PageInfo: PageInfo,
+  Boolean: Scalars['Boolean'],
   Mutation: {},
   CreateDeviceInput: CreateDeviceInput,
   CreateDevicePayload: CreateDevicePayload,
   SendInviteInput: SendInviteInput,
   SendInvitePayload: SendInvitePayload,
-  Boolean: Scalars['Boolean'],
   ResponsePayload: ResponsePayload,
   LoginPayload: LoginPayload,
   RemoveUserInput: RemoveUserInput,
@@ -347,7 +393,6 @@ export type ResolversParentTypes = {
   Subscription: {},
   SwitchedPayload: SwitchedPayload,
   BaseNode: BaseNode,
-  PageInfo: PageInfo,
   Payload: Payload,
 };
 
@@ -370,9 +415,26 @@ export type DeviceResolvers<ContextType = any, ParentType extends ResolversParen
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   usersInvited?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
   pendingInvites?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
+  log?: Resolver<Maybe<ResolversTypes['LogConnection']>, ParentType, ContextType, DeviceLogArgs>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+};
+
+export type LogResolvers<ContextType = any, ParentType extends ResolversParentTypes['Log'] = ResolversParentTypes['Log']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  action?: Resolver<Maybe<ResolversTypes['LogAction']>, ParentType, ContextType>,
+};
+
+export type LogConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LogConnection'] = ResolversParentTypes['LogConnection']> = {
+  edges?: Resolver<Array<Maybe<ResolversTypes['LogEdge']>>, ParentType, ContextType>,
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>,
+};
+
+export type LogEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LogEdge'] = ResolversParentTypes['LogEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  node?: Resolver<Maybe<ResolversTypes['Log']>, ParentType, ContextType>,
 };
 
 export type LoginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginPayload'] = ResolversParentTypes['LoginPayload']> = {
@@ -399,7 +461,7 @@ export type MyDevicesPayloadResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Device' | 'User', ParentType, ContextType>,
+  __resolveType: TypeResolveFn<'Device' | 'User' | 'Log', ParentType, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
 };
 
@@ -462,6 +524,9 @@ export type Resolvers<ContextType = any> = {
   BaseNode?: BaseNodeResolvers<ContextType>,
   CreateDevicePayload?: CreateDevicePayloadResolvers<ContextType>,
   Device?: DeviceResolvers<ContextType>,
+  Log?: LogResolvers<ContextType>,
+  LogConnection?: LogConnectionResolvers<ContextType>,
+  LogEdge?: LogEdgeResolvers<ContextType>,
   LoginPayload?: LoginPayloadResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   MyDevicesPayload?: MyDevicesPayloadResolvers<ContextType>,
