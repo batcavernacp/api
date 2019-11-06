@@ -4,7 +4,11 @@ const infoToProjection = require('./infoToProjection')
 
 const DataLoaderFactory = (function () {
   function Loader (model, projection) {
-    return new DataLoader(ids => model.find({ _id: { $in: ids.map(id => ObjectId(id)) } }, projection))
+    return new DataLoader(async ids => (
+      await model.find({ _id: { $in: ids.map(id => ObjectId(id)) } }, projection)
+    ).sort((a, b) =>
+      ids.indexOf(a._id.toString()) - ids.indexOf(b._id.toString())
+    ))
   }
   const instance = {}
   return {
