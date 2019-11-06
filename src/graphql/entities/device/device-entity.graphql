@@ -3,4 +3,19 @@ type Device implements Node inherits BaseNode {
   name: String
   usersInvited: [User]
   pendingInvites: [String]
+  logs(after: String, before: String, first: Int, last: Int): Connection<Log>
+}
+
+type Log implements Node {
+  id: ID!
+  user: User
+  action: LogAction
+  createdAt: String
+}
+
+enum LogAction {
+  ON
+  OFF
+  REMOVE_USER
+  INVITE_USER
 }
