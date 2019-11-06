@@ -8,7 +8,7 @@
     "build": "tsc && yarn copy-graphql-files && yarn copy-js-files",
     "heroku-postbuild": "yarn build",
     "start": "NODE_ENV=production node dist/index.js",
-    "copy-graphql-files": "copyfiles --flat src/graphql/*.graphql src/graphql/**/*.graphql dist/src/graphql",
+    "copy-graphql-files": "copyfiles --flat src/graphql/*.graphql src/graphql/useCases/**/*.graphql src/graphql/**/*.graphql src/graphql/entities/**/*.graphql dist/src/graphql",
     "copy-js-files": "copyfiles -u 1 src/packages/*.js src/repositories/mongoose/plugins/*.js dist/src",
     "codegen": "graphql-codegen --config codegen.yml"
   },
