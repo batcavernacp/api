@@ -29,7 +29,7 @@ module.exports = (mongoose: Mongoose) => {
   const logSchema = new Schema(schema, { timestamps: true })
 
   logSchema.plugin(dataloaderPlugin, { name: 'Log' })
-  logSchema.plugin(paginationPlugin)
+  logSchema.plugin(paginationPlugin, 'Log')
 
   logSchema.index({ device: 1 })
 

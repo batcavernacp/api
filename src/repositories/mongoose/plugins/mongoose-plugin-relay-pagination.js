@@ -1,7 +1,7 @@
 const ObjectId = require('mongodb').ObjectID
-const { fromGlobalId } = require('graphql-relay')
+const { fromGlobalId, toGlobalId } = require('graphql-relay')
 
-module.exports = function (schema) {
+module.exports = function (schema, name) {
   schema.statics.getPage = async function ({ first, after, last, before, params = {} }) {
     let edges
     let hasNextPage
@@ -35,12 +35,15 @@ module.exports = function (schema) {
     } else {
       throw new Error('wrong query')
     }
+    edges = edges.map(({ _doc: { _id } }) => ({ id: _id }))
 
     return {
-      edges: edges.map(({ _doc: { _id } }) => ({ id: _id })),
+      edges,
       pageInfo: {
         hasNextPage,
-        hasPreviousPage
+        hasPreviousPage,
+        startCursor: toGlobalId(name, edges[0].id),
+        endCursor: toGlobalId(name, edges.slice(-1)[0].id)
       }
     }
   }
