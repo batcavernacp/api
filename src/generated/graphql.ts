@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -8,6 +8,7 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
+  Datetime: any,
 };
 
 
@@ -32,20 +33,21 @@ export type CreateDevicePayload = {
   token: Scalars['String'],
 };
 
+
 export type Device = Node & {
    __typename?: 'Device',
   owner?: Maybe<User>,
   name?: Maybe<Scalars['String']>,
   usersInvited?: Maybe<Array<Maybe<User>>>,
   pendingInvites?: Maybe<Array<Maybe<Scalars['String']>>>,
-  log?: Maybe<LogConnection>,
+  logs?: Maybe<LogConnection>,
   id: Scalars['ID'],
   createdAt?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['String']>,
 };
 
 
-export type DeviceLogArgs = {
+export type DeviceLogsArgs = {
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
@@ -57,6 +59,7 @@ export type Log = Node & {
   id: Scalars['ID'],
   user?: Maybe<User>,
   action?: Maybe<LogAction>,
+  createdAt?: Maybe<Scalars['Datetime']>,
 };
 
 export enum LogAction {
@@ -336,6 +339,7 @@ export type ResolversTypes = {
   LogEdge: ResolverTypeWrapper<LogEdge>,
   Log: ResolverTypeWrapper<Log>,
   LogAction: LogAction,
+  Datetime: ResolverTypeWrapper<Scalars['Datetime']>,
   PageInfo: ResolverTypeWrapper<PageInfo>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Mutation: ResolverTypeWrapper<{}>,
@@ -373,6 +377,7 @@ export type ResolversParentTypes = {
   LogEdge: LogEdge,
   Log: Log,
   LogAction: LogAction,
+  Datetime: Scalars['Datetime'],
   PageInfo: PageInfo,
   Boolean: Scalars['Boolean'],
   Mutation: {},
@@ -410,12 +415,16 @@ export type CreateDevicePayloadResolvers<ContextType = any, ParentType extends R
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
+export interface DatetimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Datetime'], any> {
+  name: 'Datetime'
+}
+
 export type DeviceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Device'] = ResolversParentTypes['Device']> = {
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   usersInvited?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
   pendingInvites?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
-  log?: Resolver<Maybe<ResolversTypes['LogConnection']>, ParentType, ContextType, DeviceLogArgs>,
+  logs?: Resolver<Maybe<ResolversTypes['LogConnection']>, ParentType, ContextType, DeviceLogsArgs>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -425,6 +434,7 @@ export type LogResolvers<ContextType = any, ParentType extends ResolversParentTy
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   action?: Resolver<Maybe<ResolversTypes['LogAction']>, ParentType, ContextType>,
+  createdAt?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>,
 };
 
 export type LogConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LogConnection'] = ResolversParentTypes['LogConnection']> = {
@@ -523,6 +533,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   BaseNode?: BaseNodeResolvers<ContextType>,
   CreateDevicePayload?: CreateDevicePayloadResolvers<ContextType>,
+  Datetime?: GraphQLScalarType,
   Device?: DeviceResolvers<ContextType>,
   Log?: LogResolvers<ContextType>,
   LogConnection?: LogConnectionResolvers<ContextType>,
