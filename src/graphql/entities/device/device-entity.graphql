@@ -10,7 +10,7 @@ type Log implements Node {
   id: ID!
   user: User
   action: LogAction
-  createdAt: String
+  createdAt: Datetime
 }
 
 enum LogAction {
