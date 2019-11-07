@@ -8,7 +8,11 @@ const DataLoaderFactory = (function () {
       await model.find({ _id: { $in: ids.map(id => ObjectId(id)) } }, projection)
     ).sort((a, b) =>
       ids.indexOf(a._id.toString()) - ids.indexOf(b._id.toString())
-    ))
+    ),
+    {
+      // cache: true,
+      cacheKeyFn: key => key.toString()
+    })
   }
   const instance = {}
   return {
