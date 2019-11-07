@@ -8,6 +8,7 @@ interface Log {
   device: string;
   user: string;
   action: LogAction;
+  payload?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -24,7 +25,8 @@ module.exports = (mongoose: Mongoose) => {
   const schema = {
     device: Types.ObjectId,
     user: Types.ObjectId,
-    action: String
+    action: String,
+    payload: String
   }
   const logSchema = new Schema(schema, { timestamps: true })
 

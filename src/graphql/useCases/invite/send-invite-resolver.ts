@@ -1,5 +1,5 @@
 import { Context } from '../../../apollo'
-import { SendInviteInput, SendInvitePayload } from '../../../generated/graphql'
+import { SendInviteInput, SendInvitePayload, LogAction } from '../../../generated/graphql'
 import { CODES } from '../../../error'
 import { Input } from '../../schema'
 import { fromGlobalId } from 'graphql-relay'
@@ -16,30 +16,42 @@ exports.resolver = {
       const device = fromGlobalId(input.device).id
       // check type
 
-      const { Device, User } = repositories.mongoose.models
+      const { Device, User, Log } = repositories.mongoose.models
       const dev = await Device.findOne({ _id: device, owner: user }, { _id: 1 })
 
       if (!dev) throw new Error(CODES.UNAUTHORIZED)
 
       try {
-        const user = await User.findOne({ email }, { _id: 1, devicesInvited: 1 }, { _id: 1 })
-        if (!user) {
+        const userInvited = await User.findOne({ email }, { _id: 1, devicesInvited: 1 }, { _id: 1, email: 1 })
+        if (!userInvited) {
           await Device.updateOne({ _id: device }, { $addToSet: { pendingInvites: email } })
+          await Log.log({
+            device,
+            user,
+            payload: email,
+            action: LogAction.InviteUser
+          })
           return {
             success: true
           }
         } else {
-          await Device.updateOne({ _id: device }, { $addToSet: { usersInvited: user._id } })
-          await User.updateOne({ _id: user._id }, { $addToSet: { devicesInvited: device } })
+          await Device.updateOne({ _id: device }, { $addToSet: { usersInvited: userInvited._id } })
+          await User.updateOne({ _id: userInvited._id }, { $addToSet: { devicesInvited: device } })
+          await Log.log({
+            device,
+            user,
+            payload: email,
+            action: LogAction.InviteUser
+          })
           return {
             success: true,
-            user: { id: user._id }
+            user: { id: userInvited._id }
           }
         }
       } catch (err) {
-        console.log(err)
         return {
-          success: false
+          success: false,
+          error: err.message
         }
       }
     }

@@ -1,5 +1,5 @@
 import { Context } from '../../../apollo'
-import { SendInviteInput, ResponsePayload } from '../../../generated/graphql'
+import { SendInviteInput, ResponsePayload, LogAction } from '../../../generated/graphql'
 import { Input } from '../../schema'
 import { fromGlobalId } from 'graphql-relay'
 
@@ -10,14 +10,18 @@ exports.resolver = {
 
       const device = fromGlobalId(input.device).id
 
-      const { Device } = repositories.mongoose.models
+      const { Device, Log } = repositories.mongoose.models
 
       try {
-        await Device.updateOne({ _id: device, owner: user }, { $pull: { pendingInvites: email } }, { new: true })
-
+        await Device.updateOne({ _id: device, owner: user }, { $pull: { pendingInvites: email } })
+        await Log.log({
+          device,
+          user,
+          payload: email,
+          action: LogAction.CancelInvite
+        })
         return { success: true }
       } catch (err) {
-        console.log(err)
         return {
           success: false,
           error: err.message

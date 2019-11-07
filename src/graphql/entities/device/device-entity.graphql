@@ -10,6 +10,7 @@ type Log implements Node {
   id: ID!
   user: User
   action: LogAction
+  payload: String
   createdAt: Datetime
 }
 
@@ -18,4 +19,5 @@ enum LogAction {
   OFF
   REMOVE_USER
   INVITE_USER
+  CANCEL_INVITE
 }
