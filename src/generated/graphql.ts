@@ -59,6 +59,7 @@ export type Log = Node & {
   id: Scalars['ID'],
   user?: Maybe<User>,
   action?: Maybe<LogAction>,
+  payload?: Maybe<Scalars['String']>,
   createdAt?: Maybe<Scalars['Datetime']>,
 };
 
@@ -66,7 +67,8 @@ export enum LogAction {
   On = 'ON',
   Off = 'OFF',
   RemoveUser = 'REMOVE_USER',
-  InviteUser = 'INVITE_USER'
+  InviteUser = 'INVITE_USER',
+  CancelInvite = 'CANCEL_INVITE'
 }
 
 export type LogConnection = {
@@ -434,6 +436,7 @@ export type LogResolvers<ContextType = any, ParentType extends ResolversParentTy
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   action?: Resolver<Maybe<ResolversTypes['LogAction']>, ParentType, ContextType>,
+  payload?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>,
 };
 
