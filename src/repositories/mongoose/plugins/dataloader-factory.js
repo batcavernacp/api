@@ -10,7 +10,6 @@ const DataLoaderFactory = (function () {
       ids.indexOf(a._id.toString()) - ids.indexOf(b._id.toString())
     ),
     {
-      // cache: true,
       cacheKeyFn: key => key.toString()
     })
   }
