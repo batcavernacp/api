@@ -27,11 +27,6 @@ interface Edge {
   };
 }
 
-export interface Loader<T> {
-  load: (id: string, info: any) => Promise<T>;
-  loadMany: (ids: [string], info: any) => Promise<[T]>;
-}
-
 export interface RelayPagination<T> {
   getPage: (input: GetPageInput) => Connection;
 }

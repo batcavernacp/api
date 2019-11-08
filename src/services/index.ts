@@ -3,7 +3,7 @@ import { MqttClient } from 'mqtt'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { FirebaseService } from './firebase-service'
 
-export default exportFolder(__dirname, '-service', { mode: process.env.NODE_ENV === 'production' ? 'js' : 'ts' })
+const services: Services = exportFolder(__dirname, '-service', { mode: process.env.NODE_ENV === 'production' ? 'js' : 'ts' })
 
 export interface Services {
   mqtt: MqttClient;
@@ -11,3 +11,5 @@ export interface Services {
   firebase: FirebaseService;
   redis: any;
 }
+
+export { services }

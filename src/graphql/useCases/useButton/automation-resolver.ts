@@ -3,6 +3,7 @@ import { CODES } from '../../../error'
 import { SwitchInput, LogAction } from '../../../generated/graphql'
 import { Input } from '../../schema'
 import { fromGlobalId } from 'graphql-relay'
+import { withFilter } from 'graphql-subscriptions'
 
 exports.resolver = {
   SwitchedPayload: {
@@ -27,36 +28,30 @@ exports.resolver = {
     switch: async (_, { input }: Input<SwitchInput>, { services, repositories, user }: Context): Promise<boolean> => {
       const { redis } = services
       const { Device, Log } = repositories.mongoose.models
-      let topic = await redis.get(input.device)
+      input.device = fromGlobalId(input.device).id
 
       let channel = '/' + input.turn
-
-      input.device = fromGlobalId(input.device).id
+      let topic = await redis.hget(input.device, 'channel')
 
       if (!topic) {
         const device = await Device.findOne({ _id: input.device }, { channel: 1 })
         if (!device) throw new Error(CODES.NOT_FOUND)
         topic = device.channel
-        redis.set(input.device, device.channel)
+        // console.log({ id: input.device, channel: device.channel })
+        redis.hset(input.device, 'channel', device.channel)
       }
 
-      // todo: improve speed
-      const device = await Device.findOne({
-        $and: [{
-          _id: input.device,
-          $or: [{ usersInvited: user }, { owner: user }]
-        }]
-      }, { _id: 1 })
+      const test = await redis.hget(input.device, user)
 
-      if (!device) throw new Error(CODES.UNAUTHORIZED)
+      if (!test) throw new Error(CODES.UNAUTHORIZED)
 
       channel += topic
 
       services.mqtt.publish(channel, '1')
 
-      await Log.log({
+      Log.log({
         user,
-        device: device._id,
+        device: input.device,
         action: input.turn === 'ON' ? LogAction.On : LogAction.Off
       })
       return true
@@ -65,11 +60,17 @@ exports.resolver = {
 
   Subscription: {
     switched: {
-      subscribe: (_, params, { services, user }: Context) => {
-        console.log('subscribed', user)
-        // TODO: add filter
-        return services.pubsub.asyncIterator('SWITCHED')
-      }
+      resolve: ({ switched }, _, { controllers }, info) =>
+        switched,
+
+      subscribe: withFilter((_, params, { services }: Context) =>
+        services.pubsub.asyncIterator('SWITCHED'),
+
+      async ({ switched }, params, { user, services }: Context) => {
+        const device = await services.redis.get(switched.device)
+        const t = await services.redis.hget(device, user)
+        return !!t
+      })
     }
   }
 }

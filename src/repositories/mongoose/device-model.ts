@@ -1,8 +1,6 @@
 import { CODES } from '../../error'
 import { Mongoose, Document, Model } from 'mongoose'
 import jwt from 'jsonwebtoken'
-import { Loader } from '.'
-const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
 
 export interface DeviceDocument extends Document {
   channel: string;
@@ -12,7 +10,7 @@ export interface DeviceDocument extends Document {
   pendingInvites: [string];
 }
 
-export interface DeviceModel extends Model<DeviceDocument>, Loader<DeviceDocument> {
+export interface DeviceModel extends Model<DeviceDocument> {
   register: (channel: string) => DeviceDocument;
   hasOwner: (_id: string) => Promise<boolean>;
   getToken: (id: string) => string;
@@ -40,8 +38,6 @@ module.exports = (mongoose: Mongoose) => {
     }]
   }
   const deviceSchema = new Schema(schema, { timestamps: true })
-
-  deviceSchema.plugin(dataloaderPlugin, { name: 'Device' })
 
   deviceSchema.index({ channel: 'text' }, { unique: true })
 

@@ -6,8 +6,8 @@ import { fromGlobalId } from 'graphql-relay'
 
 exports.resolver = {
   SendInvitePayload: {
-    user: ({ user }: SendInvitePayload, _, { repositories }: Context, info) =>
-      user ? repositories.mongoose.models.User.load(user.id, info) : null
+    user: ({ user }: SendInvitePayload, _, { loaders }: Context, info) =>
+      user ? loaders.users.load(user.id) : null
   },
   Mutation: {
     sendInvite: async (_, { input }: Input<SendInviteInput>, { repositories, user }: Context): Promise<SendInvitePayload> => {

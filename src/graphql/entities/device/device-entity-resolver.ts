@@ -7,11 +7,11 @@ exports.resolver = {
   Device: {
     id: ({ id }) => toGlobalId('Device', id),
 
-    owner: ({ _doc }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.Device.load(_doc.owner, info),
+    owner: ({ _doc }, _, { loaders }: Context) =>
+      loaders.users.load(_doc.owner),
 
-    usersInvited: ({ _doc }, _, { repositories }, info) =>
-      repositories.mongoose.models.User.loadMany(_doc.usersInvited, info),
+    usersInvited: ({ _doc }, _, { loaders }: Context) =>
+      loaders.users.loadMany(_doc.usersInvited),
 
     logs: ({ _doc, id }, page: PageInput, { repositories }: Context): LogConnection =>
       repositories.mongoose.models.Log.getPage({
@@ -25,12 +25,12 @@ exports.resolver = {
   LogEdge: {
     cursor: ({ id }) => toGlobalId('Log', id),
 
-    node: ({ id }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.Log.load(id, info)
+    node: ({ id }, _, { loaders }: Context) =>
+      loaders.logs.load(id)
   },
 
   Log: {
-    user: ({ _doc }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.User.load(_doc.user, info)
+    user: ({ user }, _, { loaders }: Context) =>
+      loaders.users.load(user)
   }
 }

@@ -7,8 +7,8 @@ import { DeviceDocument } from '../../../repositories/mongoose/device-model'
 
 exports.resolver = {
   RegisterNewDevicePayload: {
-    device: ({ device }: RegisterNewDevicePayload, _, { repositories }: Context, info): Promise<DeviceDocument> | null =>
-      device ? repositories.mongoose.models.Device.load(device.id, info) : null
+    device: ({ device }: RegisterNewDevicePayload, _, { loaders }: Context, info): Promise<DeviceDocument> | null =>
+      device ? loaders.devices.load(device.id) : null
   },
 
   Mutation: {

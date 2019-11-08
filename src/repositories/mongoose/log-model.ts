@@ -1,7 +1,6 @@
 import { Mongoose, Document, Model } from 'mongoose'
-import { Loader, RelayPagination } from '.'
+import { RelayPagination } from '.'
 import { LogAction } from '../../generated/graphql'
-const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
 const paginationPlugin = require('./plugins/mongoose-plugin-relay-pagination.js')
 
 interface Log {
@@ -15,7 +14,7 @@ interface Log {
 export interface LogDocument extends Document {
 }
 
-export interface LogModel extends Model<LogDocument>, Loader<LogDocument>, RelayPagination<LogDocument>{
+export interface LogModel extends Model<LogDocument>, RelayPagination<LogDocument>{
   log: (log: Log) => Promise<LogDocument>;
 }
 
@@ -30,7 +29,6 @@ module.exports = (mongoose: Mongoose) => {
   }
   const logSchema = new Schema(schema, { timestamps: true })
 
-  logSchema.plugin(dataloaderPlugin, { name: 'Log' })
   logSchema.plugin(paginationPlugin, 'Log')
 
   logSchema.index({ device: 1 })

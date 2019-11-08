@@ -3,11 +3,11 @@ import { MyDevicesPayload } from '../../../generated/graphql'
 
 exports.resolver = {
   MyDevicesPayload: {
-    owned: async ({ owned }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.Device.loadMany(await owned, info),
+    owned: async ({ owned }, _, { loaders }: Context, info) =>
+      loaders.devices.loadMany(await owned),
 
-    guest: async ({ guest }, _, { repositories }: Context, info) =>
-      repositories.mongoose.models.Device.loadMany(await guest, info)
+    guest: async ({ guest }, _, { loaders }: Context, info) =>
+      loaders.devices.loadMany(await guest)
   },
 
   Query: {

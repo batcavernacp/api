@@ -1,7 +1,5 @@
 import { CODES } from '../../error'
 import { Mongoose, Document, Model } from 'mongoose'
-import { Loader } from '.'
-const dataloaderPlugin = require('./plugins/mongoose-plugin-dataloader.js')
 const paginationPlugin = require('./plugins/mongoose-plugin-relay-pagination.js')
 
 export interface UserDocument extends Document {
@@ -11,7 +9,7 @@ export interface UserDocument extends Document {
   devicesInvited: [string];
 }
 
-export interface UserModel extends Model<UserDocument>, Loader<UserDocument> {
+export interface UserModel extends Model<UserDocument> {
   register: (input: any) => UserDocument;
   get: (params: any, projection: any) => any;
   getField: (params: any, field: string) => any;
@@ -39,7 +37,6 @@ module.exports = (mongoose: Mongoose) => {
   }
   const userSchema = new Schema(schema, { timestamps: true })
 
-  userSchema.plugin(dataloaderPlugin, { name: 'User' })
   userSchema.plugin(paginationPlugin)
 
   userSchema.index({ uid: 'text' }, { unique: true })

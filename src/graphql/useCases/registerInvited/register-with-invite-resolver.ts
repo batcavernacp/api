@@ -8,7 +8,7 @@ exports.resolver = {
       if (!token) throw new Error(CODES.UNAUTHENTICATED)
 
       const { Device, User } = repositories.mongoose.models
-      const { firebase } = services
+      const { firebase, redis } = services
 
       try {
         const { uid, email } = await firebase.verifyIdToken(token)
@@ -24,6 +24,10 @@ exports.resolver = {
         await Device.updateMany({ _id: { $in: devicesInvited } }, {
           $addToSet: { usersInvited: user._id },
           $pull: { pendingInvites: email }
+        })
+
+        devicesInvited.forEach(device => {
+          redis.hset(device, user._id.toString(), 1)
         })
 
         return {

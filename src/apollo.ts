@@ -1,9 +1,10 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import { formatError } from './error'
-import services, { Services } from './services'
-import repositories, { Repositories } from './repositories'
+import { Services, services } from './services'
+import { Repositories, repositories } from './repositories'
 import controller from './controllers'
 import { schema } from './graphql/schema'
+import { createDataloaders, Loaders } from './loaders/createDataloaders'
 
 const controllers = controller({ services, repositories })
 
@@ -13,14 +14,14 @@ export default new ApolloServer({
   context: async ({ req, connection }) => connection
     ? ({
       user: await controllers.auth.verifyTokenSubscription(connection.context.token),
-      controllers,
       services,
-      repositories
+      repositories,
+      loaders: createDataloaders(repositories)
     }) : ({
       token: req.headers.token,
-      controllers,
       services,
-      repositories
+      repositories,
+      loaders: createDataloaders(repositories)
     })
 })
 
@@ -29,4 +30,5 @@ export interface Context {
   services: Services;
   repositories: Repositories;
   user?: any;
+  loaders: Loaders;
 }

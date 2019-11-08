@@ -7,8 +7,8 @@ import { UserDocument } from '../../../repositories/mongoose/user-model'
 
 exports.resolver = {
   RegisterUserPayload: {
-    user: ({ user }: RegisterUserPayload, _, { repositories }: Context, info): Promise<UserDocument> | null =>
-      user ? repositories.mongoose.models.User.load(user.id, info) : null
+    user: ({ user }: RegisterUserPayload, _, { loaders }: Context): Promise<UserDocument> | null =>
+      user ? loaders.users.load(user.id) : null
   },
 
   Mutation: {
@@ -17,7 +17,7 @@ exports.resolver = {
 
       const { qrcode, name } = input
       const { Device, User } = repositories.mongoose.models
-      const { firebase } = services
+      const { firebase, redis } = services
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -25,7 +25,11 @@ exports.resolver = {
 
         if (decoded.type !== 'Device') throw new Error(CODES.INVALID_TOKEN)
 
-        if (await Device.hasOwner(decoded.id)) throw new Error(CODES.DEVICE_REGISTERED)
+        const device = await Device.findOne({ _id: decoded.id }, { owner: 1, channel: 1 })
+
+        if (!device) throw new Error(CODES.NOT_FOUND)
+
+        if (device.owner) throw new Error(CODES.DEVICE_REGISTERED)
 
         const { uid, email } = await firebase.verifyIdToken(token)
 
@@ -33,14 +37,17 @@ exports.resolver = {
 
         await Device.updateOne({ _id: decoded.id }, { $set: { owner: user._id, name: name } })
 
+        redis.hset(decoded.id, 'channel', device.channel)
+        redis.hset(decoded.id, user._id.toString(), 1)
+
         return {
           success: true,
           user: { id: user._id }
         }
       } catch (err) {
         return {
-          success: false
-          // error: err.message
+          success: false,
+          error: err.message
         }
       }
     }

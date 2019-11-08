@@ -6,8 +6,9 @@ import { CODES } from '../../../error'
 
 exports.resolver = {
   Mutation: {
-    removeUser: async (_, { input }: Input<RemoveUserInput>, { repositories, user }: Context): Promise<ResponsePayload> => {
+    removeUser: async (_, { input }: Input<RemoveUserInput>, { repositories, user, services }: Context): Promise<ResponsePayload> => {
       const { Device, User, Log } = repositories.mongoose.models
+      const { redis } = services
       const device = fromGlobalId(input.device).id
       const userId = fromGlobalId(input.user).id
 
@@ -29,6 +30,8 @@ exports.resolver = {
         }, {
           $pull: { devicesInvited: device }
         }, { new: true, projection: { email: 1 } })
+
+        await redis.hdel(device, userId)
 
         await Log.log({
           action: LogAction.RemoveUser,

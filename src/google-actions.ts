@@ -1,30 +1,25 @@
-import { dialogflow } from 'actions-on-google'
-import services from './services'
+import { dialogflow, Permission } from 'actions-on-google'
 
-import repositories from './repositories'
-import controller from './controllers'
-const controllers = controller({ services, repositories })
+import { services } from './services'
+import { repositories } from './repositories'
+
+// TODO: auth with google assistant
 
 const assistant = dialogflow()
 
-function portao () {
-  if (process.env.DEBUG_DIALOGFLOW) {
-    console.log('portao')
-    return
-  }
-  controllers.mqtt.switch('ON', 1)
-  setTimeout(() => {
-    controllers.mqtt.switch('OFF', 1)
-  }, 75)
-}
+assistant.intent('Ask Permission', conv => {
+  conv.ask(new Permission({
+    context: 'Test',
+    permissions: ['NAME']
+  }))
+})
 
 assistant.intent('abrir portão', conv => {
-  portao()
+  console.log(conv.user)
   conv.ask('Abrindo portão.')
 })
 
 assistant.intent('fechar portão', conv => {
-  portao()
   conv.ask('Fechando portão.')
 })
 
