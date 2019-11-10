@@ -10,13 +10,15 @@ exports.resolver = {
       user ? loaders.users.load(user.id) : null
   },
   Mutation: {
-    sendInvite: async (_, { input }: Input<SendInviteInput>, { repositories, user }: Context): Promise<SendInvitePayload> => {
+    sendInvite: async (_, { input }: Input<SendInviteInput>, { services, repositories, user }: Context): Promise<SendInvitePayload> => {
       const { email } = input
 
       const device = fromGlobalId(input.device).id
       // check type
 
       const { Device, User, Log } = repositories.mongoose.models
+      const { redis } = services
+
       const dev = await Device.findOne({ _id: device, owner: user }, { _id: 1 })
 
       if (!dev) throw new Error(CODES.UNAUTHORIZED)
@@ -37,6 +39,8 @@ exports.resolver = {
         } else {
           await Device.updateOne({ _id: device }, { $addToSet: { usersInvited: userInvited._id } })
           await User.updateOne({ _id: userInvited._id }, { $addToSet: { devicesInvited: device } })
+          await redis.hset(device, userInvited._id.toString(), 1)
+
           await Log.log({
             device,
             user,
