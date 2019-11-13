@@ -4,8 +4,6 @@ import { SwitchInput, LogAction } from '../../../generated/graphql'
 import { Input } from '../../schema'
 import { fromGlobalId } from 'graphql-relay'
 import { withFilter } from 'graphql-subscriptions'
-import { RequestHandler, HandlerInput } from 'ask-sdk-core'
-import { Response } from 'ask-sdk-model'
 
 exports.resolver = {
   SwitchedPayload: {
@@ -76,27 +74,3 @@ exports.resolver = {
     }
   }
 }
-
-const PortaoIntentHandler: RequestHandler = {
-  canHandle (handlerInput: HandlerInput): boolean {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'PortaoIntent'
-  },
-  handle (handlerInput: HandlerInput): Response {
-    console.log({ handlerInput })
-    const speechText = 'É pra já'
-
-    if (handlerInput.requestEnvelope.session) {
-      console.log('session', handlerInput.requestEnvelope.session)
-      console.log('perm', handlerInput.requestEnvelope.session.user.permissions)
-      console.log('token', handlerInput.requestEnvelope.session.user.accessToken)
-    }
-
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
-      .getResponse()
-  }
-}
-
-export { PortaoIntentHandler }

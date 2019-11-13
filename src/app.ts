@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 import { schema } from './graphql/schema'
 import * as Adapter from 'ask-sdk-express-adapter'
 import { buildSkills } from './alexa-actions'
-import { PortaoIntentHandler } from './graphql/useCases/useButton/automation-resolver'
+import { PortaoIntentHandler } from './alexa/PortaoIntentHandler'
 const { ExpressAdapter } = Adapter
 
 function authMiddleware (req, res, next): void {
