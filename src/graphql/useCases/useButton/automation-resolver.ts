@@ -87,7 +87,9 @@ const PortaoIntentHandler: RequestHandler = {
     const speechText = 'É pra já'
 
     if (handlerInput.requestEnvelope.session) {
-      console.log('requested', handlerInput.attributesManager.getRequestAttributes())
+      console.log('session', handlerInput.requestEnvelope.session)
+      console.log('perm', handlerInput.requestEnvelope.session.user.permissions)
+      console.log('token', handlerInput.requestEnvelope.session.user.accessToken)
     }
 
     return handlerInput.responseBuilder
