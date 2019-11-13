@@ -86,6 +86,10 @@ const PortaoIntentHandler: RequestHandler = {
     console.log({ handlerInput })
     const speechText = 'É pra já'
 
+    if (handlerInput.requestEnvelope.session) {
+      console.log('requested', handlerInput.attributesManager.getRequestAttributes())
+    }
+
     return handlerInput.responseBuilder
       .speak(speechText)
       .withSimpleCard('Hello World', speechText)
