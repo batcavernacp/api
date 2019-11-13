@@ -28,7 +28,7 @@ export function PortaoIntentHandler (services: Services, repositories: Repositor
 
             if (!channel) throw new Error(CODES.NOT_FOUND)
 
-            const test = await redis.hget(user.favoriteDevice.toString(), user)
+            const test = await redis.hget(user.favoriteDevice.toString(), user._id.toString())
 
             if (!test) throw new Error(CODES.UNAUTHORIZED)
 
