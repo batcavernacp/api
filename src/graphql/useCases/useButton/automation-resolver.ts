@@ -84,7 +84,7 @@ const PortaoIntentHandler: RequestHandler = {
   },
   handle (handlerInput: HandlerInput): Response {
     console.log({ handlerInput })
-    const speechText = 'Hello World!'
+    const speechText = 'É pra já'
 
     return handlerInput.responseBuilder
       .speak(speechText)
