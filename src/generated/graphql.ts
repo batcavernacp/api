@@ -68,7 +68,8 @@ export enum LogAction {
   Off = 'OFF',
   RemoveUser = 'REMOVE_USER',
   InviteUser = 'INVITE_USER',
-  CancelInvite = 'CANCEL_INVITE'
+  CancelInvite = 'CANCEL_INVITE',
+  AlexaSkill = 'ALEXA_SKILL'
 }
 
 export type LogConnection = {
