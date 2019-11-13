@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   email: string;
   devicesOwned: [string];
   devicesInvited: [string];
+  favoriteDevice: string;
 }
 
 export interface UserModel extends Model<UserDocument> {
@@ -33,7 +34,8 @@ module.exports = (mongoose: Mongoose) => {
     }],
     devicesInvited: [{
       type: mongoose.Types.ObjectId
-    }]
+    }],
+    favoriteDevice: mongoose.Types.ObjectId
   }
   const userSchema = new Schema(schema, { timestamps: true })
 
