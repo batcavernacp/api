@@ -20,4 +20,5 @@ enum LogAction {
   REMOVE_USER
   INVITE_USER
   CANCEL_INVITE
+  ALEXA_SKILL
 }

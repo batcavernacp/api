@@ -7,6 +7,8 @@ import { schema } from './graphql/schema'
 import * as Adapter from 'ask-sdk-express-adapter'
 import { buildSkills } from './alexa-actions'
 import { PortaoIntentHandler } from './alexa/PortaoIntentHandler'
+import { services } from './services'
+import { repositories } from './repositories'
 const { ExpressAdapter } = Adapter
 
 function authMiddleware (req, res, next): void {
@@ -18,7 +20,7 @@ function authMiddleware (req, res, next): void {
   next()
 }
 
-const adapter = new ExpressAdapter(buildSkills([PortaoIntentHandler]), true, true)
+const adapter = new ExpressAdapter(buildSkills([PortaoIntentHandler(services, repositories)]), true, true)
 
 const app = express()
 
