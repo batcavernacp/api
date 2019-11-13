@@ -21,17 +21,17 @@ export function PortaoIntentHandler (services: Services, repositories: Repositor
             const email = await getEmail(handlerInput.requestEnvelope.session.user.permissions.consentToken)
 
             const user = await User.findOne({ email }, { favoriteDevice: 1 })
-
+            console.log({ email, user })
             if (!user) throw new Error(CODES.NOT_FOUND)
 
             const channel = await redis.hget(user.favoriteDevice.toString(), 'channel')
-
+            console.log({ channel })
             if (!channel) throw new Error(CODES.NOT_FOUND)
 
             const test = await redis.hget(user.favoriteDevice.toString(), user._id.toString())
-
+            console.log({ test })
             if (!test) throw new Error(CODES.UNAUTHORIZED)
-
+            console.log('channel', '/ON' + channel)
             services.mqtt.publish('/ON' + channel, '1')
 
             Log.log({
