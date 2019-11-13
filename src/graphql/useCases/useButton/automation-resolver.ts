@@ -27,27 +27,16 @@ exports.resolver = {
   Mutation: {
     switch: async (_, { input }: Input<SwitchInput>, { services, repositories, user }: Context): Promise<boolean> => {
       const { redis } = services
-      const { Device, Log } = repositories.mongoose.models
+      const { Log } = repositories.mongoose.models
       input.device = fromGlobalId(input.device).id
 
-      let channel = '/' + input.turn
-      let topic = await redis.hget(input.device, 'channel')
-
-      if (!topic) {
-        const device = await Device.findOne({ _id: input.device }, { channel: 1 })
-        if (!device) throw new Error(CODES.NOT_FOUND)
-        topic = device.channel
-        // console.log({ id: input.device, channel: device.channel })
-        redis.hset(input.device, 'channel', device.channel)
-      }
+      const channel = await redis.hget(input.device, 'channel')
 
       const test = await redis.hget(input.device, user)
 
       if (!test) throw new Error(CODES.UNAUTHORIZED)
 
-      channel += topic
-
-      services.mqtt.publish(channel, '1')
+      services.mqtt.publish('/' + input.turn + channel, '1')
 
       Log.log({
         user,
