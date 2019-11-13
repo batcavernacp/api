@@ -4,6 +4,10 @@ import apolloServer from './apollo'
 import { assistant } from './google-actions'
 import bodyParser from 'body-parser'
 import { schema } from './graphql/schema'
+import * as Adapter from 'ask-sdk-express-adapter'
+import { buildSkills } from './alexa-actions'
+import { PortaoIntentHandler } from './graphql/useCases/useButton/automation-resolver'
+const { ExpressAdapter } = Adapter
 
 function authMiddleware (req, res, next): void {
   const buff = Buffer.from(req.headers.authorization.split(' ')[1], 'base64')
@@ -14,11 +18,15 @@ function authMiddleware (req, res, next): void {
   next()
 }
 
+const adapter = new ExpressAdapter(buildSkills([PortaoIntentHandler]), true, true)
+
 const app = express()
 
 app.get('/graphql/schema', (req, res) => res.send(schema.typeDefs))
 
 app.post('/dialogflow', bodyParser.json(), authMiddleware, assistant)
+
+app.post('/alexa', adapter.getRequestHandlers())
 
 apolloServer.applyMiddleware({ app })
 
