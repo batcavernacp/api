@@ -47,22 +47,26 @@ export function PortaoIntentHandler (services: Services, repositories: Repositor
             return handlerInput.responseBuilder
               .speak('É pra já')
               .withSimpleCard('Hello World', 'É pra já')
+              .withShouldEndSession(true)
               .getResponse()
           } catch (err) {
             return handlerInput.responseBuilder
               .speak(err.message)
               .withSimpleCard('Hello World', err.message)
+              .withShouldEndSession(true)
               .getResponse()
           }
         }
         return handlerInput.responseBuilder
           .speak('Verifique permissões')
           .withSimpleCard('Hello World', 'Verifique permissões')
+          .withShouldEndSession(true)
           .getResponse()
       }
       return handlerInput.responseBuilder
         .speak('Realize o login')
         .withSimpleCard('Hello World', 'Realize o login')
+        .withShouldEndSession(true)
         .getResponse()
     }
   }
