@@ -54,6 +54,10 @@ export type DeviceLogsArgs = {
   last?: Maybe<Scalars['Int']>
 };
 
+export type LigarReceptorInput = {
+  device: Scalars['ID'],
+};
+
 export type Log = Node & {
    __typename?: 'Log',
   id: Scalars['ID'],
@@ -102,6 +106,8 @@ export type Mutation = {
   registerWithDevice: RegisterUserPayload,
   checkQRCode: ResponsePayload,
   switch?: Maybe<Scalars['Boolean']>,
+  ligarReceptor?: Maybe<Scalars['Boolean']>,
+  getStatus?: Maybe<Scalars['Boolean']>,
 };
 
 
@@ -147,6 +153,16 @@ export type MutationCheckQrCodeArgs = {
 
 export type MutationSwitchArgs = {
   input: SwitchInput
+};
+
+
+export type MutationLigarReceptorArgs = {
+  input: LigarReceptorInput
+};
+
+
+export type MutationGetStatusArgs = {
+  input: LigarReceptorInput
 };
 
 export type MyDevicesPayload = {
@@ -360,6 +376,7 @@ export type ResolversTypes = {
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
+  LigarReceptorInput: LigarReceptorInput,
   Subscription: ResolverTypeWrapper<{}>,
   SwitchedPayload: ResolverTypeWrapper<SwitchedPayload>,
   BaseNode: ResolverTypeWrapper<BaseNode>,
@@ -398,6 +415,7 @@ export type ResolversParentTypes = {
   RegisterWithDeviceInput: RegisterWithDeviceInput,
   SwitchInput: SwitchInput,
   SWITCH: Switch,
+  LigarReceptorInput: LigarReceptorInput,
   Subscription: {},
   SwitchedPayload: SwitchedPayload,
   BaseNode: BaseNode,
@@ -467,6 +485,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   registerWithDevice?: Resolver<ResolversTypes['RegisterUserPayload'], ParentType, ContextType, RequireFields<MutationRegisterWithDeviceArgs, 'input'>>,
   checkQRCode?: Resolver<ResolversTypes['ResponsePayload'], ParentType, ContextType, RequireFields<MutationCheckQrCodeArgs, 'input'>>,
   switch?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSwitchArgs, 'input'>>,
+  ligarReceptor?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationLigarReceptorArgs, 'input'>>,
+  getStatus?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationGetStatusArgs, 'input'>>,
 };
 
 export type MyDevicesPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyDevicesPayload'] = ResolversParentTypes['MyDevicesPayload']> = {
