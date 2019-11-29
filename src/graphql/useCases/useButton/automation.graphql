@@ -8,8 +8,14 @@ input SwitchInput {
   device: ID!
 }
 
+input LigarReceptorInput {
+  device: ID!
+}
+
 type Mutation {
   switch(input: SwitchInput!): Boolean @auth
+  ligarReceptor(input: LigarReceptorInput!): Boolean
+  getStatus(input: LigarReceptorInput!): Boolean
 }
 
 type SwitchedPayload {

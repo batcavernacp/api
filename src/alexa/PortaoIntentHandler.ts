@@ -42,7 +42,7 @@ export function PortaoIntentHandler (services: Services, repositories: Repositor
 
             setTimeout(() => {
               services.mqtt.publish('/OFF' + channel, '1')
-            }, 150)
+            }, 350)
 
             return handlerInput.responseBuilder
               .speak('É pra já')

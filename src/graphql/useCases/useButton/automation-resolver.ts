@@ -1,6 +1,6 @@
 import { Context } from '../../../apollo'
 import { CODES } from '../../../error'
-import { SwitchInput, LogAction } from '../../../generated/graphql'
+import { SwitchInput, LogAction, LigarReceptorInput } from '../../../generated/graphql'
 import { Input } from '../../schema'
 import { fromGlobalId } from 'graphql-relay'
 import { withFilter } from 'graphql-subscriptions'
@@ -43,6 +43,24 @@ exports.resolver = {
         device: input.device,
         action: input.turn === 'ON' ? LogAction.On : LogAction.Off
       })
+      return true
+    },
+    ligarReceptor: async (_, { input }: Input<LigarReceptorInput>, { services }: Context): Promise<boolean> => {
+      const { redis } = services
+
+      const channel = await redis.hget(input.device, 'channel')
+
+      services.mqtt.publish('/receptor' + channel, '1')
+
+      return true
+    },
+    getStatus: async (_, { input }: Input<LigarReceptorInput>, { services }: Context): Promise<boolean> => {
+      const { redis } = services
+
+      const channel = await redis.hget(input.device, 'channel')
+
+      services.mqtt.publish('/status' + channel, '1')
+
       return true
     }
   },

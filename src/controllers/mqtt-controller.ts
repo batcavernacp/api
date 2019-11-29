@@ -8,9 +8,11 @@ module.exports = ({ services, repositories }: Context) => {
   })
 
   mqtt.on('message', async function (topic, msg, pkt) {
-    if (!topic.includes('turned')) return
-
-    // const value = JSON.parse(msg)
+    if (!topic.includes('turned')) {
+      const value = JSON.parse(msg.toString())
+      console.log({ topic, value })
+      return
+    }
 
     const turned = topic.includes('turnedOn') ? 'ON' : 'OFF'
 
